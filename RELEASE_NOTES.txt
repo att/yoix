@@ -1,0 +1,4711 @@
+
+    Version 2.3.1 (11/25/11 - external release)
+	Added a Screen type, changed VM.screen from a dictionary to a
+	Screen, added the VM.screens array, added a field named screen
+	to all frames, dialogs and windows, and added documentation for
+	VM (under the interpreter directory). The changes were added
+	when multiple monitor support was included in the interpreter.
+	See the new VM and Screen reference pages and the discussion
+	of the screen field in all frame, dialog and window reference 
+	pages for more details.
+
+	---
+
+	Added a field named fullscreen to Swing and AWT windows, frames,
+	and dialogs. See the reference pages for more details.
+
+	---
+
+	Added a "this block" to the named block variations. If there are
+	two tokens in the variable name reference and the first is "this"
+	then references to "this" in the block will refer to the compound
+	object that's used for the block storage. For example, run the
+	script
+
+	    import yoix.*.*;
+
+	    Dictionary dict = {
+		int count = 10;
+	    };
+
+	    this dict {
+		printf("count=%d\n", count);
+		{
+		    int count = 1;
+
+		    printf("count=%d\n", count);
+		    printf("this.count=%d\n", this.count);
+		}
+	    }
+
+	and
+
+	    count=10
+	    count=1
+	    this.count=10
+
+	prints on standard output.
+
+	---
+
+	Modified the File type and some of the low level file related
+	interpreter code so it now accepts Microsoft UNC pathnames in
+	the format
+
+	    //ComputerName/SharedFolder/Resource
+
+	as a reference to a network resource. On a Windows platform
+	you can also use the more familiar notation
+
+	    \\ComputerName\SharedFolder\Resource
+
+	to access the same resource. The low level changes were made
+	in YoixMisc.toYoixpath() and those changes also affected the
+	yoixPath() builtin. See the File and yoixPath reference pages
+	for more details.
+
+	---
+
+	Added builtins named xmlToYoix() and yoixToXML() to yoix.parser
+	that can be used to translate between an XML String and a Yoix
+	structure built using dictionaries, arrays, and strings. See the
+	reference pages for more details.
+
+	---
+
+	Added builtins named xmlAdd() and xmlGet() to yoix.parser that
+	are often used to manipulate XML after xmlToYoix() converts it
+	into an appropriate structure. See the reference pages for more
+	details.
+
+	---
+
+	Made lots of improvements to the YWAIT package, including the
+	addition of "edit components" that can be used when you want to
+	support undo/redo operations and have immediate validation of
+	all fields.
+
+	---
+
+	The current focus owner, if it's a Yoix component, can now be
+	obtained using the new getFocusOwner() builtin that was added
+	to yoix.awt and yoix.swing. See the reference page for more
+	details.
+
+	---
+
+	Builtins named getFirstFocusComponent(), getFocusComponentAfter(),
+	getFocusComponentBefore(), and getFocusComponents() were added
+	to yoix.awt and yoix.swing and can be used to get information
+	about focus traversal. See the reference pages for more details.
+
+	---
+
+	Added a focusable field to all swing and awt components. Almost
+	all components have their focusable field start at TRUE, which
+	means they can accept the keyboard focus. Setting focusable to
+	FALSE prevents the component from becoming the focus owner. See
+	the reference pages for more details.
+
+	---
+
+	Modified the implementation the nextfocus field that's defined
+	in most Swing components so the tag associated with a component
+	can also be used. See the reference pages for more details.
+
+	---
+
+	Added the --cookie, --cookies, and --cookiepolicy command line
+	options that let you preload cookies and control how cookies
+	received from the server are handled. All cookies set using
+	these command line options must include a domain argument, but
+	you don't get any warnings if there's a mistake or if you're
+	using Java 1.5 where there's no cookie manager support. These
+	new cookie options are included in the usage summary that you
+	get with -? or --info command line options.
+
+	NOTE - still lots of work to do before the CookieManager type
+	would be worth documenting.
+
+	---
+
+	Added builtins named getScrollerSize() and getViewportSize() to
+	yoix.swing that can be used to get the size of the scroller that
+	the interpreter adds to some Swing components. See the reference
+	pages for more details.
+
+	---
+
+	Added a builtin named getSaturationAdjustedColor() to yoix.awt
+	and yoix.swing. See the reference pages for more detail.
+
+	---
+
+	JScrollPane now accepts JScrollBars in the layout array when
+	they're followed by the VERTICAL or HORIZONTAL constraints, so
+	there's now a relatively simple way for scripts to control the
+	JScrollPane. We also added extent, origin, and viewport fields
+	to JScrollPane. See the JScrollPane and JScrollBar reference
+	pages for more details.
+
+	---
+
+	Added a field named dividerlocked to JSplitPane, that can be
+	temporarily used to stop the divider from moving when one or
+	both of the displayed components is changed. See the reference
+	page for more details.
+
+	---
+
+	XML numeric time zones, like -04:00, are now recognized by the
+	date() and parseDate() builtins when an 'X' character is found
+	in the format specification. See the documentation for more
+	details.
+
+	NOTE - the YoixSimpleDateFormat class was added to handle the
+	low level details.
+
+	---
+
+	Made a small change to the behavior of the visible field in
+	components, like JTextArea or JTable, that provide their own
+	internal scroller that's managed by their scroll field. This
+	version shows or hides the component and its internal scroller
+	whenever the visible field is modified, which is a change from
+	previous releases where the visible field only controlled the
+	visibility of the component itself.
+
+	---
+
+	We modified the pathforall() builtin so it can also be called
+	with a single function that handles all segment types. See the
+	reference page for more details.
+
+	---
+
+	The access(), isDirectoryPath() and isFilePath() builtins were
+	modified slightly so they now accept pathnames that begin with
+	the "file:" prefix.
+
+	---
+
+	Added an optional third argument to strjoin() that when TRUE
+	includes undefined elements (as empty strings) in the result.
+	See the reference page for more details.
+
+	---
+
+	Added an optional second argument to htmlEncode() that can be
+	used to specify additional characters that should be encoded.
+	See the reference page for more details.
+
+	---
+
+	Added an optional int argument to the isBuiltin(), isCallable(),
+	and isFunction() builtins and when that argument is supplied
+	the builtins only return TRUE if call could be made with that
+	number of arguments. See the reference pages for more details.
+
+	---
+
+	Made a simple change to GridBagLayout so it accepts an Insets
+	and assigns it to the insets in the internal GridBagConstraints
+	that are associated with columns. See the reference page for
+	more details.
+
+	---
+
+	Added a builtin named zoom() to JCanvas. See the reference page
+	for more details.
+
+	---
+
+	Added a function named allowEdit() to JTable that's called, if
+	it's not NULL, before a cell can be changed by editing or the
+	SET_FIELD action. See the reference page for more details.
+
+	---
+
+	Added a function named afterSelect() to JTable that's called,
+	if it's not NULL, whenever the JTable's selection changes. See
+	the reference page for more details.
+
+	---
+
+	Added invokeEditImport() as a way for scripts to be notified
+	when the edit cell changes because data was imported by a DnD
+	operation or from a Clipboard. See the reference page for more
+	details.
+
+	---
+
+	Added JTable cell editor specific actions named EDIT_GET_CELL,
+	EDIT_GET_FIELD, EDIT_SET_FIELD, EDIT_SET_BACKGROUND, and
+	EDIT_SET_FOREGROUND. See the reference page for more details.
+
+	---
+
+	Added GET_SELECTED_CELL as a JTable action. See the reference
+	page for more details.
+
+	---
+
+	Added a field name sortmap to JTable that can be used to force
+	one column to be sorted by the contents of another column that's
+	usually hidden. See the reference page for more details.
+
+	---
+
+	Added selectionmark as a JTableColumn field that can be set to
+	a string (e.g., "\x25BA") that you want automatically displayed
+	in every row that's selected in that column. See the reference
+	page for more details.
+
+	---
+
+	Added optional third and fourth elements in the JTableColumn's
+	cellcolors array that can be used to control the background and
+	foreground colors when a cell is selected. See the JTableColumn
+	reference page for more details.
+
+	NOTE - didn't make any changes to JTable's cellcolors array, but
+	it's something we eventually should investigate.
+
+	---
+
+	Added EDIT_START documentation to the JTable reference page.
+
+	---
+
+	Modified the tooltiptext documentation for the SET_COLUMN_FIELD
+	action to include array arguments, which are also allowed.
+
+	---
+
+	Added the missing documentation of JScrollPane's setIncrement()
+	builtin.
+
+	---
+
+	Fixed the javaws YDAT examples that were accidentally broken in
+	the last release. Problem happened because the variables.yx YDAT
+	file was accidentally omitted from the javaws package that was
+	installed on the web site.
+
+	---
+
+	Fixed the wikipedia edit history example that's included as one
+	of our Java Web Start examples and distributed as a YDAT example
+	in our binary distribution. The example broke when the HTML that
+	it parses was changed in a way that made it completely miss the
+	edit changes associated with all users. The fix was easy and the
+	example is working again.
+
+	===
+
+	Fixed several bugs in the XML Parser that caused problems in how
+	right brackets (i.e., ']') were handled in CHARDATA and CDATA.
+	For example, the parser failed on "<tag>]</tag>" but worked if
+	the ']' and '<' were separated by another character. The current
+	solution was a brute force attempt at getting the right answer
+	from the parser, but it can be expensive, particularly for input
+	that contains CDATA, because each one now initially scans the
+	remaining input. Eventually should look for a more efficient
+	solution, particularly for CDATA. See Tests/BUGS/bug35.yx for a
+	script that illustrates the behavior (in older versions of the
+	interpreter).
+
+	---
+
+	Minor fix to YoixObject.getTransferData() that restricts callable
+	pointer use to dictionaries. Had problem with a JCanvas that now
+	seems to have paint() in slot 0.
+
+	---
+
+	If you don't tell Java's DataFlavor class what class loader to
+	use it automatically uses the system class loader. That's usually
+	OK, but the YWAIT client uses a URL loader to load the interpreter,
+	which means the YoixDataTransfer can't create the DataFlavor used
+	to represent a YoixObject. Fix was to use a different DataFlavor
+	constructor in YoixDataTransfer.java that includes the appropriate
+	class loader as an argument.
+
+	---
+
+	Added a consumed field to several events and also added code to
+	YoixBodyComponent.java that initializes the field (based on the
+	eventflags that can be set by command line option) right before
+	an event handler is called. The field is checked after the call
+	and if TRUE the event is officially consumed. None of this has
+	been documented yet.
+
+	---
+
+	Fixed a mistake in the low level implementation of xmlToYoix().
+	Without the change the script
+
+	    xml=@<<<page name="xxx"></page>>>@;
+	    printf("%s\n", yoixToXML(xmlToYoix(xml, 0, TOSS_WS_CHARDATA)));
+
+	would print something like
+
+	    <page><name>xxx</name></page>
+
+	which was obviously wrong.
+
+	---
+
+	Small change to low level implementation of yoixToXML(). Without
+	the fix the script
+
+	    xml=@<<<page name="xxx">12</page>>>@;
+	    printf("%s\n", yoixToXML(xmlToYoix(xml, 0, TOSS_WS_CHARDATA)));
+
+	would print
+
+	    <page name="xxx"></page>
+
+	which was obviously wrong.
+
+	---
+
+	Added trimtostroke() builtin to Path (and Graphics) that tries
+	to eliminate overlapping segments from a path when it's stroked
+	with the linewidth, linecap, and linejoin currently set in the
+	Path. Not documented yet.
+
+	---
+
+	Looks like there was a mistake in setPage() that probably was
+	introduced in a 2.3.0 bug fix. The bug that was introduced by
+	the 2.3.0 change meant that reading a JTextPane's text field
+	always returned HTML. The new fix changed the implementation
+	of YoixBodyComponentSwing.setPage() when a NULL value was
+	assigned to the field. We also changed how setPage() behaved
+	when an exception was thrown while it was trying to load a
+	URL. Finally we also changed the order of setField(N_PAGE)
+	and setField(N_TEXT) in buildComponent() because Java threw
+	an obscure exception when the page field was handled before
+	the text field (if both fields were initialized to non NULL
+	values).
+
+	---
+
+	Fixed a minor mistake in YoixParser.abort() that happened when
+	it tried to adjust the column after an INVALIDASSIGNMENT error.
+	The mistake was using text.length() instead of text.length()-1
+	as the last character in the buffered line.
+
+	---
+
+	Added documentation for JLabel's altalignment field.
+
+	---
+
+	Fixed a bug to make sure that reading the file field defined in
+	a JFileDialog with autodispose set to TRUE returns NULL after
+	Cancel button is pressed. A related bug that was also fixed was
+	to make sure that reading the file field after the Save button 
+	was pressed returned the right value when autodispose is set to
+	TRUE.
+
+	---
+
+	Made performance improvements to YoixBodyComponent.setLayout()
+	that reduce overhead needed to sync components dictionaries.
+	The old code is still available, but USENEWSETLAYOUT, which is
+	defined in YoixBodyComponent.java must be set to false.
+
+	---
+
+	Added code to YoixBodyComponentSwing.java that handles integer
+	prototype values for a JList and JComboBox, but decided not to
+	document it, for now anyway, because we're not convinced by the
+	implementation. There's a chance it will be removed in future
+	releases, so we recommend that you don't write code that uses
+	it.
+
+	---
+
+	Made a small change to the getTableCellRendererComponent()
+	versions in YoixSwingJTable - when selection foregrounds or
+	backgrounds are set via JTableColumns cellcolors field then
+	a NULL entry for a row means cell's current background or
+	foreground color is used. Last implementation treated NULL as
+	a request to use the table's default selection background or
+	or foreground. You now have to explicitly set it, which is
+	mostly why the selectionbackground and selectionforeground
+	changes described below were made (i.e., reading the fields
+	now returns the appropriate default value when they haven't
+	been explicitly set).
+
+	---
+
+	Changed YoixBodyComponentSwing so reading selectionbackground
+	and selectionforeground return a Color that's obtained from
+	the component (JTextComponent, JTable, and JTree) rather than
+	returning the value stored in the data dictionary. There may
+	be other fields that deserve similar changes - maybe later.
+
+	---
+
+	Fixed some of the annoying divider behavior in a JSplitPane
+	that as far as I can tell can be traced back to Java's plaf
+	code for the JSplitPane. There may be a bit more to do (see
+	the comments in YoixSwingjSplitPane.java). Also added a field
+	named keephidden to JSplitPane, but decided not to document
+	it yet, which means applications shouldn't use it.
+
+	---
+
+	Added some growable support to several YoixMisc.copyIntoXXX()
+	methods used it in YoixMiscXML.xmlToYoix(). Was done quickly
+	and probably not very well, so the changes eventually should
+	be looked at again.
+
+	---
+
+	Fixed a small bug in YoixSwingJComboBox.setSelectedItem() that
+	only surfaced when a Yoix JComboBox was used as an editor in a
+	JTable. The old code implicitly assumed the item was a String
+	or null and only looked for a matching YoixSwingLabelItem when
+	it was a string. The assumption was OK for all calls made from
+	YoixBodyComponentSwing.java, but wasn't necessarily true when
+	the JComboBox was a table cell editor. In that case the call
+
+	    delegate.setValue(value);
+
+	in YoixSwingJTable.java could end up in setSelectedItem() and
+	the item argument might not be string. Wasn't a serious issue,
+	but did mean a JCombBox editor might not be initialized using
+	the table cell's current value.
+
+	---
+
+	Fixed a careless mistake in YoixBodyComponent.setForeground()
+	that accidentally used the JTabbedPane's foreground color
+	instead of the appropriate child's foreground color when it
+	called syncTabProperty().
+
+	---
+
+	Just added code to YoixMain.java that enables the verifier in
+	YoixMiscSSL.java, just like the -s0 option does, whenever the
+	--acceptcertificates is used on the command line. The change
+	means that hostname mistakes in any certificates will also be
+	ignored.
+
+	---
+
+	Made a change in YoixModuleXColor.java so that the xcolor colors
+	aren't automatically loaded into the Color dictionary. Means you
+	now have explicitly call addColor() if you want xcolor colors to
+	be loaded in the Color dictionary. Old approach meant an automatic
+	expansion of the Color dictionary whenever the yoix.xcolor module
+	was loaded, which was behavior that was really hard to explain.
+
+	NOTE - this change may affect existing applications!!!
+
+	---
+
+	Changed the processKeyBinding() method in YoixSwingJTable.java to
+	try to make sure focus never gets transferred to hidden columns.
+
+	---
+
+	Changed the KeyEvent.KEY_TYPED code in the processKeyBinding()
+	method in YoixSwingJTable.java to make sure the keyChar is used
+	in the event built for keyTyped() method that's defined in the
+	YoixJTableCellEditor class. It was omitted in previous versions,
+	which meant the call that's built for the invocationEditKey()
+	handler didn't see the typed character if it was called from
+	processKeyBinding(). Not all that important, but it was a mistake
+	that could be observed when a JCheckBox editor was toggled by
+	hitting the space key. 
+
+	---
+
+	Added a popuptrigger field to the InvocationEvent generated by a
+	JTable and passed to invocationAction() and invocationSelection()
+	event handlers. In practice it will only be non-zero on Windows
+	systems because both event handlers are only called when a mouse
+	button is released.
+
+	---
+
+	Added an explicit requestFocus() call to the setCellEditor()
+	method defined in YoixSwingJTable.java when the cell editor is
+	a JComboBox. Without the change the user has to click on a cell
+	that uses a JComboBox as editor before it would respond to key
+	strokes, which was annoying when the user wanted to only use the
+	keyboard to handle focus traversal and cell editing.
+
+	---
+
+	Made a small change to the YoixJTableBooleanRenderer constructor
+	defined in YoixSwingJTable.java so we can tell when it has the
+	focus. Was a simple fix for annoying behavior that gave the user
+	absolutely no indication that a table cell that used a JCheckBox
+	as the cell editor had the focus.
+
+	---
+
+	Reading columns from a table sometimes resulted in attributes
+	that wouldn't load when those columns were used to build a new
+	table. There was inconsistent error handling in the code that
+	handled attributes in the SET_COLUMN_FIELD and SET_TYPE_FIELD
+	actions and the code that handled attributes that were defined
+	in a Yoix JTableColumn (i.e., setColumn()). Two of the three
+	aborted when an integer attribute wasn't positive, but the
+	other (i.e., SET_COLUMN_FIELD) accepted all integers. Since
+	aborting on 0 integers meant that columns read from a table
+	might not be usable in the construction of another table, we
+	decided to be more forgiving and accept all integers.
+
+	---
+
+	Modified documentation of the foreground and background fields
+	in several Swing and AWT components so it reflects what really
+	happens in the pickBackground() and pickForeground() methods
+	defined in YoixBodyComponent.java.
+
+	---
+
+	Changed declaration of keychar from int to char in keyPressed(),
+	keyReleased() and keyTyped() methods in YoixSwingJTable.java.
+	Using an int version messed up the way the keystring field in
+	was set in the event that was built for Yoix scripts.
+
+	---
+
+	Made several changes to YoixSwingJTable.java that make loading
+	a table via text or values more consistent. The changes were
+	in processColumn() and processValues() and only changes what
+	happens when some column types (e.g., DATE_TYPE, DOUBLE_TYPE,
+	INTEGER_TYPE, MONEY_TYPE, or TIME_TYPE) are asked to load empty
+	strings (or null which shouldn't happen). The old implementation
+	aborted, which didn't match what happens when empty strings are
+	loaded via the text field.
+
+	---
+
+	Fixed an obscure bug in YoixJTableNumberRenderer.setFormatter()
+	that in some cases resulted in the incorrect display of columns
+	that displayed data that relies on a multiplier value that's not
+	1 in the corresponding DecimalFormatter. Didn't happen often, so
+	it's not something we've seen in existing Yoix applications, but
+	it definitely was a bug that needed attention and it did happen
+	in a new YWAIT application.
+
+	---
+
+	Made a few simple changes to the getTableCellRendererComponent()
+	methods defined in various inner classes in YoixSwingJtable. The
+	loops happened when the JTable's getBackground() returned null.
+	Made similar changes to the code responsible for choosing the
+	foreground color in the getTableCellRendererComponent() methods,
+	even though we didn't observe any infinite loops caused by the
+	foreground color.
+
+	NOTE - loop appears to be thread related and wasn't reproducible,
+	but the Java dump was very clear about where the code was stuck.
+
+	---
+
+	Fixed several small mistakes in getTableCellRendererComponent()
+	that accidentally used the view row to select the appropriate
+	color.
+
+	---
+
+	Made a simple change to YoixSwingJTable.checkAndSetValueAt()
+	that eliminated invocationEdit() changes that were caused when
+	the editor value was an empty string and the stored value was
+	null.
+
+	---
+
+	Fixed a mistake in the YoixSwingJTable.isCellEditable() method
+	that used the view row argument it the getRowEditableBoolean()
+	call, but that method expected a values row. The mistake caused
+	problems when cell editability was set via arrays.
+
+	---
+
+	Added code to YoixSwingJTable.setCellEditor() to make sure the
+	caret is visible when JTextField is the cell editor and the cell
+	is entered by keyboard traversal.
+
+	---
+
+	Fixed the JTable GET_ROW_RECT and GET_COLUMN_RECT related code.
+	Also modified TableDragGestureRecognized() in ywait_common.yx to
+	fix the visual (and offset) that was used to represent the row
+	that was being dragged. The mistakes in the original code can be
+	seen in tables that are scrolled horizontally.
+
+	NOTE - the JTable documentation of GET_COLUMN_RECT really looks
+	like it need fixing - eventually will look into it.
+
+	---
+
+	Tried many of the available JavaCC versions, but had no luck with
+	version 5.0, which is the latest version. The main problem appears
+	to be in generated TokenMananager code where two private variables
+	were converted to StringBuilders from StringBuffers but appropriate
+	method arguments in the generated code weren't changed.
+
+	=== TODO List ===
+
+	Eventually may want to make the replace() builtin more flexible
+	and accept a string as the first or second arguments. Definitely
+	not urgent, but should be pretty easy and occasionally useful.
+
+	---
+
+	YoixSwingJTable.yoixConvertColumnIndexToModel() aborts when the
+	the index is out of bounds. Doesn't seem to agree with the way
+	the corresponding row methods behave. Why not return -1 when the
+	index is bad? yoixConvertColumnIndexToView() also aborts. Think
+	we eventually should investigate, but need to take a close look
+	at how the return values are used in YoixSwingJTable.java before
+	making any change.
+
+	---
+
+	Really seems like there should be a single JTable event handler
+	that gets called whenever the contents of the edit cell change.
+	Right now it looks like we need to use invocationEditKey() to
+	capture key strokes, invocationEdit() to capture state changes
+	when the edit cell is a JCheckBox (perhaps also when it's a
+	JComboBox) and invocationEditImport() for DnD transfers. Also
+	doesn't look like validator() can help at all when the script
+	wants to be notified of every edit change because it's only
+	called at the end of an edit!! Eventually investigate and see
+	if things can be improved.
+
+	---
+
+	Was asked about table cell editing of DOUBLE_TYPE. Looks like
+	the editor is loaded using Double.toString() (or something like
+	it). That's OK, but isn't necessarily compatible with the value
+	displayed by the cell if there's a format string. Can we improve
+	the behavior? Experimented a bit, and it may be trickier than it
+	seemed at first, because using the format string may not be the
+	right approach and even if it is the result (e.g., if there are
+	commas in the format) might not parse and/or the user may not
+	exactly match the format. Need to think about it some. One
+	possibility is a field (e.g., "editFormat") that can be used to 
+	produce the string that's initially loaded in the cell editor.
+	Need to think about it some - probably not urgent, but may be
+	worth adding to the next release if it's not too tricky. See
+	bug36.yx - even though it's really not a bug.
+
+	---
+
+	Is there something we can do so invocationChange() can tell if
+	the event was triggered by the user or by the script? Perhaps
+	we could add a field to the Yoix event.
+
+	---
+
+	There may be issues with reading/writing JTable's altfont after
+	it is implicitly set once when an array of strings is used to
+	set alttooltiptext.
+
+    Version 2.3.0 (11/13/09 - external release)
+	Added a type named Compiler to this release that can be used to
+	translate Yoix functions or separate Yoix scripts into bytecode
+	(actually Java class files is more accurate) that can run on the
+	Java Virtual Machine. As a convenience we also added
+
+	    VM.compiler
+
+	so most Yoix applications don't need their own Compiler. See the
+	Compiler reference page for more details.
+
+	The compiler added to this release currently generates code in
+	an assembly language that's recognized by the classes in package
+	att.research.yoix.jvma (now officially part of the Yoix release)
+	and translated into bytecode that runs on the JVM. The assembly
+	language and other features of the att.research.yoix.jvma package
+	have not been documented yet, so right now the source code is the
+	only place to go if you're looking for more information.
+
+	---
+
+	The YWAIT client side Java code was completely rewritten and as
+	a result the application's complete jar file no longer needs to
+	be installed on client systems. Instead clients install a small
+	jar file once and that jar file contacts CGI scripts on one or
+	more servers that tell the client what it needs to download and
+	how it is supposed to start the application. The real jar file
+	is downloaded from a server and can optionally be cached on the
+	client. Since the client side jar file no longer needs updating
+	(unless hardcoded server information changes) we were also able
+	to remove update support from all YWAIT screens and server side
+	scripts.
+
+	---
+
+	Yoix scripts that are compressed using gzip can now be executed
+	by the Yoix interpreter. In other words a gzipped script can be
+	named on the command line, included using the include statement,
+	or executed using the execute() builtin. We also added
+
+	    VM.zipped
+
+	as a read-only integer that controls whether gzipped scripts or
+	the zipped archives created by the compiler can be executed. If
+	bit 0 is set gzipped scripts can be executed and if bit 1 is set
+	zipped archives (i.e., compiled scripts) can be executed. Right
+	now the default value is 1 and the -z option is the only way to
+	change it, so add -z2 or -z3 to the command line used to start
+	the interpreter whenever you want to execute compiled scripts.
+
+	---
+
+	Added a field named trackfocus to JTabbedPane that can help if
+	you want the focus to be managed by the individual tabbed panes.
+	See the reference page for more details.
+
+	---
+
+	We added a field named firstfocus to JDialog, JFrame, JWindow,
+	JInternalFrame, Dialog, Frame, and Window. See the reference
+	pages for more details and a brief description of how focus
+	selection is handled the first time a window is shown.
+
+	---
+
+	Fixed a bug that prevented a JList from being cleared when NULL
+	was assigned to its labels or items fields.
+
+	---
+
+	Changed the default buttonmodel back to 0, which is the way it
+	was prior to the 2.2.1 release. The change was made because at
+	least one Mac user complained, it only affected Mac users, and
+	it restored buttonmodel to the release 2.2.0 setting, which for
+	years was the default setting.
+
+	---
+
+	Fixed the wikipedia edit history example that's included as one
+	of our Java Web Start examples and distributed as a YDAT example
+	in our binary distribution. The example broke when the HTML that
+	it parses was changed in a way that made it completely miss the
+	edit changes associated with all users. The fix was easy and the
+	example is working again.
+
+	---
+
+	Even though drag and drop in JLists works it doesn't behave well
+	when multiple selections are involved because a mouse press used
+	to start a drag changes the list's selected items. The dndlist.yx
+	script included in our examples builds a component that a behaves
+	like JList but was designed to do a better job handling drag and
+	drop. It can be used as a prototype if you need drag and drop and
+	multiple selections in a component that behaves something like a
+	JList. It was written in a style that should let you include the
+	main parts as one of the YWAIT constructors.
+
+	===
+
+	Fixed a JTable bug that prevented the SET_FIELD from changing
+	some fields that weren't initialized when the table was loaded.
+	Also fixed several JTable bugs that happened when table sorting
+	and cell editing were combined.
+
+	---
+
+	Fixed a bug in the JTable cell validation code that could result
+	in an infinite loop if the JTable validator() function returned
+	false. We also modified the JTable code so the cell validator()
+	is called with NULL as the post-edit or pre-edit arguments when
+	we want to indicate an empty cell. Unfortunately this currently
+	doesn't apply to STRING_TYPE, TEXT_TYPE, or OBJECT_TYPE cells!!
+
+	---
+
+	Fixed a JTextPane bug in YoixBodyComponentSwing that prevented
+	the correct display of HTML when it was set via the text field.
+	The fix was adding
+
+	    ((JTextPane)comp).setEditorKit(new YoixHTMLEditorKit());
+
+	to the YoixBodyComponentSwing.setPage() method. Also looks like
+	there's an issue with style sheets hanging around after reading
+	a Web site via the page field and then switching to using text
+	to display HTML.
+
+	Made a quick try at changing the YoixBodyComponentSwing.setText()
+	method so a new document and editor were installed when in HTML
+	mode. Sort of worked, but the result (initially) depended on the
+	order of the
+
+		setField(N_PAGE);
+		setField(N_TEXT);
+
+	calls made in buildComponent(). Flipping their order seemed
+	reasonable, but decided the interactions between the text and
+	page fields need a closer look and probably a more disciplined
+	fix - later.
+
+	---
+
+	Fixed a deadlock in the YDAT DataManager.java class file that
+	was related to the thread-safe Swing implementation that was
+	introduced in version 2.2.0.
+
+	---
+
+	Made several low level YDAT changes that fixed the behavior
+	of shapes drawn from a single specification but used to mark
+	more than one location on a map. Old implementation included
+	all the marks in a single path, which didn't work when each
+	of the marks is supposed to identify a separate location on
+	a map at any zoom level.
+
+	---
+
+	Fixed a mistake in the gsubsti() and gvsubsti() builtins that
+	could result in an infinite loop when "^" or "$" were used as
+	the pattern. Fixed another mistake that caused gsubsti() and
+	gvsubsti() to occasionally make incorrect substitutions in the
+	interior of target strings when the matched pattern explicitly
+	restricted substitutions to the start of the string using "^".
+
+	=== TODO List ===
+
+	Eventually should add opposite to FocusEvent. Also think there
+	should be a way to completely remove an event listener so Java
+	doesn't forward them. removeEventhandler() doesn't do anything
+	more than setting the event handler to NULL, so the events all
+	still get forwarded to YoixBodyComponent(). Think it could do
+	more, but the implementation might be a little tricky.
+
+	---
+
+	Looks like Calendar.set() doesn't ever clear milliseconds, so
+	unixtime fields may not compare the way you expect after using
+	Calendar.set(). Investigate and see if there's an easy fix.
+
+	---
+
+	Added YoixSwingJFormattedTextField.java to the source code but
+	it's incomplete, not included in the Makefile, and obviously
+	not hooked up as a Swing component. It's probably worthwhile
+	and eventually should be finished and documented.
+
+    Version 2.2.1 (11/25/08 - external release)
+	We modified the interpreter so Java Web Start can start it as
+	an "untrusted" application, added several ".jnlp" file to our
+	web site that run some non-trivial examples (e.g., Periodic
+	Table and Unicode applications), and created a web page that
+	describes the Java Web Start examples and includes links that
+	that you can click to start the examples.
+
+	---
+
+	Added support for a system splash screen that can be shown
+	using the --splash option or the showSystemSplashScreen()
+	builtin and hidden by the hideSystemSplashScreen() builtin,
+	both of which are defined in the yoix.system module. See the
+	reference pages for information about the builtins. Use -?
+	or --info for a summary of the command line options.
+
+	---
+
+	Added a field named shape to JFrame, JDialog, JWindow, Frame,
+	Dialog, and Window, that can be used to create non-rectangular
+	windows, provided you're using Java 1.6.0 update 10 (or later).
+	See the reference pages for more details.
+
+	NOTE - we eventually will add support for transparent windows.
+
+	---
+
+	Added a field named decorationstyle to Frame, Dialog, JFrame,
+	and JDialog that can be used to control the decorations that
+	are usually added to frames and dialogs.
+
+	NOTE - non-rectangular frames and dialogs, which require Java
+	1.6.0 update 10 (or later), must always disable native window
+	decorations using this field. See the reference pages for more
+	details.
+
+	---
+
+	Added SpringLayout as a new layout manager. See the reference
+	page for more details.
+
+	---
+
+	Added a builtin named getResource() to yoix.system that's mostly
+	for javaws applications. See the reference page for more details.
+
+	---
+
+	Changed getRGBColor() so it also accepts a string or int as the
+	representation of the red, green and blue components. See the
+	reference page for more details.
+
+	---
+
+	Changed the -g command line option slightly so the function call
+	trace that was a standard part of errors in previous releases now
+	only happens when you use the -g:trace option. Also added -g:none,
+	which right now behaves just like the -O option.
+
+	---
+
+	Added a module named yoix.jnlp that contains several builtins
+	that are available when the Yoix interpreter is started by Java
+	Web Start. The currently supported builtins are showDocument()
+	and isWebBrowserSupported() - see the reference pages for more
+	details.
+
+	NOTE - additional builtins will be added in future releases.
+
+	---
+
+	Changed default VM.buttonmodel to 1, which only changes modifiers
+	if you're on a Mac, the CTRL key is held, and button 1 is pressed,
+	which can be useful if you're using a one button mouse.
+
+	===
+
+	Fixed an obscure mistake in our handling of the layout array
+	that's defined in all Swing and AWT containers that failed to
+	propagate changes made to a layout array that was at least one
+	level removed from the root container in an existing layout
+	hierarchy.
+
+	---
+
+	Fixed the mouse wheel code in YoixMakeEvent.java that resulted
+	in accidentally keeping a reference to components that received
+	MouseWheelEvents for a bit longer than necessary. The reference
+	sometimes delayed garbage collection of components until another
+	mouse wheel events arrived and that behavior made it look like
+	a memory leak.
+
+	---
+
+	We changed quit handling in the YWAIT ywait_reconnect.yx and
+	ywait_reconnect_password.yx screens and the change seems to
+	have fixed the hang that happened when users pressed "Quit"
+	in either reconnect screen. Change was tested in GFMS and in
+	EPG, but we probably should build a YWAIT application from the
+	current source and test it. Also might be better if we dealt
+	with this in Global.Quit using a new thread allocated in the
+	ywait_threads.yx file.
+
+	---
+
+	Made some minor quoting changes to the scripts that are built
+	when you run the Yoix installer that should address problems
+	that users occasionally report.
+
+	---
+
+	Made a few changes in the interpreter that will let Java 1.4.2
+	start the interpreter and run some Yoix scripts. Mostly done so
+	users with old versions of Java will be able to run our Java Web
+	Start examples.
+
+	=== TODO List ===
+
+	Setting font magnification on the command line doesn't behave
+	particularly well for JProgressBar, so we eventually may want
+	to investigate.
+
+	---
+
+	A user wanted to to hide tabs in a JTabbedPane by setting the
+	visible field, which currently doesn't work but seems perfectly
+	reasonable. A brute force approach (replacing the layout array)
+	works, but the visible approach would be much better. The same
+	user also wanted to move tabs around, but in this case replacing
+	the layout array is undoubtedly the easiest way.
+
+	---
+
+	Had a suggestion about adding := as an assignment operator that's
+	also a declaration (the way Limbo does).
+
+    Version 2.2.0 (8/26/08 - external release)
+	A Yoix script specified on the command line that has a name that
+	ends in the suffix ".yxs" is now automatically run as an applet,
+	which means it is run with limited capabilities that pretty much
+	duplicate the restrictions imposed on a Java applet by a browser.
+	In other words, running a script that ends in .yxs is essentially
+	like adding --applet as last command line option. As usual, you
+	can always expand what's allowed when you run a .yxs script using
+	one or more -S command line options.
+
+	NOTE - as a precaution any script specified on the command line
+	that contains control characters or ".yxs" anywhere in its name
+	is also run as an applet. This special treatment of script names
+	currently only happens at startup, which means it doesn't apply
+	to scripts that are executed or included by a running Yoix script.
+
+	NOTE - information about command line options can be obtained by
+	typing
+
+	    yoix -?
+
+	which writes a short explanation on standard output, or
+
+	    yoix --info
+
+	which gives you more a more detailed explanation.
+
+	---
+
+	We've included several interesting (and non-trivial) examples of
+	interactive charts that were built using a script named ychart.yx
+	and a special module named ychart that's included in this release.
+	One example is a "Periodic Table" that also includes a puzzle and
+	a fairly simple "Chart of the Nuclides". The second example is a
+	chart that displays Unicode characters, which by default loads the
+	first 16K characters, but is capable of displaying the first 64K in
+	a single chart (i.e., Plane 0 of the official Unicode standard). We
+	think you'll find both examples interesting, even if you're not a
+	chemistry student or typographer.
+
+	In addition to the practical examples we've included a few trivial
+	charts that illustrate techniques needed to apply ychart.yx to new
+	examples. Right now getting something simple up is fairly easy, but 
+	really interesting examples like the two we're distributing in this
+	release still take quite a bit of planning and Yoix coding.
+
+	---
+
+	One of the consequences of ychart.yx and our attempt at generality
+	is that we were really forced to start working on a tutorial, so in
+	this release you'll find a fairly substantial first cut at
+
+	    http://www.yoix.org/tutorial.html
+
+	It's not complete (we figure it's about half of what's needed), but
+	it does cover many topics you need if you're curious and decide to
+	start poking around in ychart.yx. Our plans are to continue working
+	on the tutorial and we probably will update the online version from
+	time to time without necessarily waiting for the next release.
+
+	---
+
+	We added some new Java code that we think makes our implementation
+	of Swing thread-safe, and that means Yoix applications don't have
+	to worry about only accessing fields in Swing components from the
+	"event dispatch thread". The thread-safe code can be disabled from
+	the command line using the --threadsafe=false option (it's true by
+	default). We also added two builtins named setSwingThreadSafe() and
+        getSwingThreadSafe() to yoix.swing that scripts can use when they
+	want to change the threadsafe setting, provided it wasn't set by a
+	command line option.
+
+	NOTE - we haven't extended the threadsafe code to the YDAT module
+	yet, but we don't think it's much of an issue so we figure it can
+	wait for the next release (or so).
+
+	---
+
+	We added an integer field named panandzoom to JCanvas that can be
+	used to enable automatic panning and zooming. Callback functions
+	named afterPan() and afterZoom() that are occasionally useful were
+	also added. Panning and zooming are controlled by separate groups
+	of eight bits in panandzoom. For example,
+
+	    JFrame f = {
+		int visible = TRUE;
+
+		Array layout = {
+		    new JCanvas {
+			int panandzoom = 0x000401;
+
+			paint(Rectangle rect) {
+			    graphics.moveto(100, 100);
+			    graphics.show("hello, world");
+			}
+		    },
+		};
+	    };
+
+	is a trivial "hello, world" example that lets you zoom using the
+	mouse wheel and pan using button 1. The third group of eight bits
+	can be configured when you want to provide "reset" control using
+	mouse buttons. See the JCanvas reference page for more details.
+
+	---
+
+	We finally corrected a long-standing oversight. In all previous
+	releases dictionaries could be initialized by comma separated
+	expressions enclosed in braces, but only if the dictionary name
+	was followed by square brackets. It was an annoying restriction
+	that has been removed, so in this release all three declarations
+
+	    Dictionary d1 = {"count", 1, "greeting", "hello"};
+	    Dictionary d2[] = {"count", 1, "greeting", "hello"};
+	    Dictionary d3[2] = {"count", 1, "greeting", "hello"};
+
+	are allowed and they create dictionaries that contain identical
+	elements, namely an integer named count that has the value 1 and
+	a string named greeting that has the value "hello".
+
+	---
+
+	We modified the grammar slightly so the final qualifier can now be
+	attached to function definitions. For example,
+
+	    final Countdown(int count) {
+		for (; count > 0; count--) {
+		    printf("%d%s", count, count > 1 ? ", " : "\n");
+		    sleep(1);
+		}
+	    }
+
+	defines a function named Countdown that can't be changed because
+	we used final in its definition. In case you're a bit surprised,
+	Yoix functions behave just like variables and by default they can
+	be redefined or even set to NULL. Allowing the final keyword in
+	a function definition is an easy way to prevent redefinitions, if
+	that's really what you want.
+
+	---
+
+	If a syntax error occurs on a line that doesn't match the starting
+	line number of the statement the parser was working on then we add
+	the line number where the statement started to the error message.
+	For example, typing in an obvious mistake like
+
+	    if (VM != NULL) {
+	        x = 12;
+	        y;
+	    else
+
+	results in something like
+
+	    Error: syntaxerror; Encountered: "else"; Line: 4; Column: 1;
+	                                    Start Line: 1; Source: -stdin-
+
+	being printed (as a single line) on standard error. In addition
+	most errors generated by the parser (e.g., a syntaxerror) also
+	display the source file line where the error happened and use a
+	caret to mark the column where the parser noticed the mistake.
+
+	We also changed the error identification string that you get when
+	you declare a variable that already exists from "baddeclaration"
+	to "redeclaration".
+
+	---
+
+	We made a change to our implementation of catch that now treats a
+	missing return value just like a non-zero return, so in both cases
+	the interpreter's normal error handling is short-circuited. In all
+	previous releases the interpreter would continue its normal error
+	handling if there was no explicit return value from a catch block.
+
+	NOTE - there's a small chance this change that will affect some
+	existing applications, although the only case that we found was
+	in an unimportant catch block in our YWAIT package.
+
+	---
+
+	Changed qsort() and the queue() and queueOnce() builtins defined
+	in Thread so they all now accept a pointer to a function as an
+	argument. Also qsort(), which didn't return anything in previous
+	releases, now returns the sorted items array. See the Thread and
+	qsort() reference pages for more details.
+
+	---
+
+	We made some internal changes to our implementation of copyArea()
+	builtin and we added corresponding builtins named rectcopy() and
+	rectmove() to Graphics. See the copyArea() and Graphics reference
+	pages for more details.
+
+	---
+
+	We added builtins named rectContainsRect(), rectIntersectionRect(),
+	rectIntersectsRect(), and rectUnionRect() to yoix.module.graphics.
+	See the reference pages for more details.
+
+	---
+
+	We added a builtin named getenv() to yoix.system and we also added
+	checkReadEnvironment() to our SecurityManager. See the reference
+	pages for more details.
+
+	---
+
+	We added builtins named parseURL(), isMCGlobal(), isMCLinkLocal(),
+	isMCNodeLocal(), isMCOrgLocal(), isMCSiteLocal() and isReachable()
+	to yoix.net. Most of them were added to java.net.InetAddress in
+	version 1.4. We also changed getAllByName() slightly to let you
+	request that the addresses be returned in network byte order. See
+	the reference pages for more details.
+
+	---
+
+	We added builtins named cbrt(), cosh(), expm1(), hypot(), iround(),
+	ieeeRemainder(), log1p(), round(), signum(), sinh(), tanh(), ulp(),
+	toDegrees(), and toRadians() to yoix.math. Most of them correspond
+	to methods that were added to java.lang.Math in version 1.5. See
+	the reference pages for more details.
+
+	---
+
+	We added builtins named checkRead(), checkWrite(), checkDelete(),
+	checkAccept(), checkConnect(), checkListen(), checkMulticast(),
+	checkPropertiesAccess(), checkReadProperty(), checkWriteProperty(),
+	checkReadEnvironment(), checkSystemClipboardAccess(), checkExec(),
+	checkExit(), checkReadDisplayPixels(), and checkCreateRobot() to
+	yoix.system that can be used to run security checks that don't
+	trigger security exceptions. See the reference pages for more
+	details.
+
+	---
+
+	Added drawablebbox() and rectbutton() builtins to Graphics. See
+	the Graphics reference page for more details.
+
+	---
+
+	Added maptopixel() builtin to Graphics and Matrix. Although the
+	builtin may accept more than a Point as a single argument we have
+	only documented the Point version so that's all you should use.
+	See the Graphics or Matrix reference pages for more details.
+
+	---
+
+	We added intersects() and eointersects() to Graphics and Path and
+	modified add() intersect(), subtract() and xor() to take a Path,
+	Rectangle, or NULL as their first argument. See the Graphics and
+	Path reference pages for more details.
+
+	---
+
+	Added an optional argument to clip(), eoclip() and rectclip() that
+	controls whether path is intersected with or subtracted from the
+	current clipping path. See the Graphics reference page for more
+	details.
+
+	---
+
+	Added an optional argument to stroke(), fill() and eofill() that
+	can be used to prevent path from being tossed after it's stroked
+	or filled. See the Graphics reference page for more details.
+
+	---
+
+	Added an optional int argument to the repaint() builtin defined
+	in the drawable Swing components JCanvas, JDesktopPane, JDialog,
+	JFileDialog, JFrame, JInternalFrame, JLayeredPane, JPanel, and
+	JWindow. See the reference pages for more details.
+
+	---
+
+	Added fields named prototypevalue and selectedindex to JComboBox
+	and JList. We also provide an easy way, using the items field, to
+	load images along with text. See the JComboBox and JList reference
+	pages for more details.
+
+	---
+
+	We added unitstoscroll and whennext fields to MouseWheelEvents.
+	We also added an integer field named eventflags to VM and we use
+	it to decide how to calculate unitstoscroll. When bit 0 is 0 we
+	just multiply the wheelrotation and scrollamount fields in the
+	MouseWheelEvent and store the result in our unitstoscroll field,
+	otherwise we use a fancier algorithm that tries to pick a value
+	that's appropriate for all platforms. See the MouseWheelEvent
+	reference page for more details.
+
+	---
+
+	JSplitPane's dividerlocation field now always returns a number
+	between 0.0 and 1.0 inclusive when the field is read.
+
+	---
+
+	We added fields named linecap, linejoin, linewidth, and miterlimit
+	to Path that can be used to control the behavior of the instroke()
+	builtin that's define in a Path. See the Path reference page for
+	more details.
+
+	---
+
+	Added builtins named stringfit() and stringsize() and fields named
+	fontfacename and psname to Font. See the Font reference page for
+	more details.
+
+	---
+
+	Added a builtin named hashIndex() to yoix.util. See the reference
+	page for more details.
+
+	---
+
+	Added a builtin named getHSBComponents() to yoix.swing and yoix.awt
+	that returns the HSB color components that correspond a RGB color.
+	See the reference page for more details.
+
+	---
+
+	Made a to the access() builtin so that executablilty of a file can
+	be accurately checked when Java 1.6 is being used.
+
+	===
+
+	We made some changes in YoixSecurityOptions.java for the accept,
+	connect, and listen actions and as a result they now automatically
+	use InetAddress.getAllByName() to try to assign the same allow or
+	deny permissions to all IP addresses that are assigned to a host.
+	To qualify for the special treatment the pattern specified using
+	the -S command line option can't include '*' and also must specify
+	a host and a port (separated by a ':'). For example,
+
+	    yoix -Sallow:connect:www.google.com:80
+
+	lets you connect to port 80 using www.google.com or any of the IP
+	addresses that are assigned to www.google.com. Without the change
+	you would also have to allow connections to the IP addresses using
+	separate -S options. Definitely inconvenient, particularly because
+	you probably don't know which IP address you'll get when you try
+	to open http://www.google.com.
+
+	---
+
+	Fixed an apparent mistake in the implementation of the defined()
+	builtin that affected the lookup when an integer was supplied as
+	the first argument and the target was an object, like an array or
+	dictionary, with a nonzero offset. The mistake in our Java code
+	was that it didn't add the target's offset to the integer, but
+	instead just used the integer to find the element to check.
+
+	---
+
+	We changed the actionPerformed() and itemStateChanged() methods
+	in YoixBodyComponent.java to try and skip double calls that can
+	happen in Swing menus that have their own event handlers but the
+	"owner" of the menu also has defined one or both of them. There's
+	a very small chance this could affect existing applications, but
+	we don't think it's likely.
+
+	---
+
+	We now compensate for a Swing popup menu problem that apparently
+	introduced in Java 1.6. The problem happened when a popup menu
+	doesn't fit completely in the window that's supposed to contain
+	it and a security manager is installed. The issue, we believe, is
+	that the setAlwaysOnTop(true) call triggers a security exception
+	in the AWT Window class so Java's Popup class should either catch
+	the exception or make the call as privileged code. We compensated
+	in YoixSecurityManager.checkPermission() with a small kludge that
+	seems to work and we think is otherwise fairly innocent.
+
+	---
+
+	YoixInterpreter.statementSynchronized() always built a string that
+	was only used for special debugging, and in most cases building it
+	involved a Yoix object dump which in turn automatically triggered
+	sorting for object like dictionaries. If a big dictionary was used
+	for synchronization the unnecessary sorting overhead could add up
+	and become noticeable if the synchronized statement was executed
+	often. Anyway, we no longer dump the Yoix object and we only build
+	the debugging string when the special debugging mode is enabled.
+
+	---
+
+	We fixed a low level mistake in our Java code that affected popup
+	menus that were attached to a JComboBox on a Mac.
+
+	---
+
+	Fixed a mistake that sometimes affected how the linewidth, linejoin,
+	linecap, miterlimit, dasharray, and dashphase fields were treated
+	by gsave() and grestore().
+
+	---
+
+	We made it so custom values can be added to Graphics. Change was in
+	YoixModuleGraphics.java and may need testing.
+
+	---
+
+	We added some public methods to YoixBodyInterpreter.java that are
+	designed to let custom module code look for variables the way Yoix
+	scripts currently do. We used them when we converted Yoix functions
+	defined in ychart.yx to the corresponding Java methods defined in
+	the ychart module.
+
+	---
+
+	Added the fontDrawString() method to YoixInterfaceFont.java so we
+	could pass a Java Graphics object directly to it from Java code.
+	This was mostly done for custom modules, like ychart.
+
+	---
+
+	Changed YoixBodySwingComponent.buildLabelItems() so an empty array
+	assigned to items, values, or mappings behave just like NULL. Got
+	an error in the old version because the method tried to get the
+	element at index 0 in the array.
+
+	---
+
+	Changed YoixMiscJFC.paintBackground() so it no longer casts its
+	Graphics object to Graphics2D. The casting caused problems when
+	paintBackground() was called to paint into a Graphics object that
+	was specifically allocated by Java for printing. Happened on Linux
+	and resulted in a Java exception.
+
+	---
+
+	Made a small change to YoixBodyPath.pathSetShape() that fixes an
+	occasional problem that happened when the shape argument was an
+	area that was empty. See comments in YoixBodyPath.pathSetShape()
+	and YoixBodyGraphics.builtinClipPath() for more details.
+
+	---
+
+	We made several code changes in YoixBodyComponent.updateRoot() and
+	YoixBodyComponentSwing.doMenuLayout() to fix a mistake that omitted
+	updating the root in child menus when a new value was assigned to
+	a JMenu's items field.
+
+	---
+
+	Made several subtle changes to YoixBodyPath.pathStrokePath() that
+	improve the performance and output when the path's matrix has been
+	scaled uniformly. See the comments in the method for more info.
+
+	---
+
+	Made a small change to YoixSwingJCanvas.setState() that eliminates
+	unnecessary repaint() calls when the state changes and the canvas
+	doesn't have a border. Important because setState() can be called
+	from most of the YoixSwingJCanvas.java MouseListener methods, and
+	that resulted unnecessary painting in an early version of ychart.
+
+	---
+
+	Made a small change in YoixInterpreter.statementTry() so the error
+	message that we get when a Yoix script catches a securityerror will
+	include information that's available in the Java exception. The old
+	implementation didn't include any information that might help track
+	down and resolve the problem.
+
+	---
+
+	This release changed definition of JAVACTARGET in file common.mk to
+	1.5 from 1.2 and it's that change and the JAVAMINVERSION definition
+	in YoixConstants.java that means you can't use Java version 1.4.2
+	to start the Yoix interpreter. We really don't recommend it, but if
+	for some reason you have to run Java 1.4.2 you could try changing
+	JAVACTARGET and JAVAMINVERSION and then building a yoix.jar file
+	using Java 1.5 or Java 1.6. The resulting file probably would let
+	you run on 1.4.2, although new features that require 1.5 or greater
+	will definitely cause problems (i.e., Java runtime errors).
+
+	=== TODO List ===
+
+	There's a layout bug (for all containers including menus) that's
+	illustrated by bug19.yx. We've investigated the problem and have
+	a possible solution that we plan on implementing in the very near
+	future (hopefully in our next release).
+
+	---
+
+	Looks like our qsort() could use improvement when it's asked to
+	sort a dictionary with lots of uninitialized elements. It takes
+	a long time, but seems like it should be a relatively easy fix.
+
+	---
+
+	The repaint() builtin defined in Swing and AWT components can use
+	some work. It currently doesn't implement arguments that let you
+	specify the rectangle that's supposed to be painted.
+
+	---
+
+	Java's JComboBox.setSelectedIndex() method might be a source of
+	unnecessary work, since we seem to have the index but it ends up
+	calling setSelectedItem() anyway. We eventually may investigate
+	more, but it's probably not a big deal.
+
+	---
+
+	May want to check the methods in YoixModuleGraphics.java that use
+	getInt() and see if getDouble() could be used and if so is it a
+	better choice. Many eventually have to pass integers to methods
+	in java.awt.Graphics, so there's probably not much to change.
+
+	---
+
+	Check YDAT Java code to see if it needs the threadsafe update.
+
+	---
+
+	We eventually want to let square brackets be used in declarations
+	of objects, like a Rectangle, which would be an easy way to make a
+	copy of the object (without resorting to unroll()). Place to start
+	probably is in YoixMake.yoixType(). Changing the line
+
+	    } else if (type.isPointer() && length < 0) {
+
+	in YoixMake.yoixType() to
+
+	    } else if (type.isPointer() && (length < 0 || adjust)) {
+
+	doesn't accomplish much but may be a reasonable place to start. We
+	may initially want to restrict this to empty square brackets.
+
+	---
+
+	Added a questionable argument to the pathbbox() builtin that's not
+	documented and really needs to be revisited. Right now the argument
+	is used in ychart.yx, but it shouldn't be used anywhere else and
+	may be removed in a future release. Obviously we'll have to fix
+	ychart.yx if that ever happens. Anyway we should take a close look
+	before the next release. Issue had to do with marking the canvas
+	and then slowly scrolling up and down with the mark at the top of
+	the screen. Occasionally part of it would be omitted, but we had
+	to scroll (i.e., pan) slowly.
+
+	---
+
+	Path defines a paint() function that is currently undocumented and
+	right now is only called, if it's defined, right at the end of the
+	constructor. Apparently designed to help with initialization, but
+	we're not convinced. Eventually should investigate and either toss
+	it or document it.
+
+	---
+
+	Looks like break and continue don't work properly when used in a
+	try/catch statement. Actually we fixed try blocks on 8/8/08, but
+	catch was harder and we didn't want to hold the release up, so we
+	pushed it into the next release.
+
+	---
+
+	Should we try to do something with exampleserver.yx, like revive
+	it as a .yxs script? Suspect not but probably should be checked.
+
+    Version 2.1.10 (11/28/07 - external release)
+	Added BUILTIN_GETSEARCHQUERY builtin to ydat/DataGenerator.java
+	so search string queries can be easily extracted. Thought about
+	adding a way to do it with BUILTIN_MATCH, but already had a few
+	httpd log specific builtins and didn't seem like one more would
+	hurt. Eventually may want a BUILTIN_GETMATCH, or something like
+	it, to return matched dsubexpressions.
+
+	---
+
+	Added an AUTO_PATTERN type to Regexp that will act as either a
+	text or a shell pattern based on absence or presence of shell
+	wild cards and character classes in the pattern. Rudimentary
+	ORing of patterns is also allowed.
+
+	---
+
+	Changed YoixMisc.tokenImage() so POSTINCREMENT and PREINCREMENT
+	return "++" and POSTDECREMENT and PREDECREMENT return "--". In
+	the old implementation the constants weren't mapped to token
+	strings so we just got long strings like "POSTINCREMENT".
+
+	---
+
+	Added "uniform spread" capabilities to YDAT plots (not stacks).
+
+	---
+
+	Fixed an apparent mistake in reading the timezone field in a
+	Calendar. Easy fix that's undoubtedly correct, but the old way
+	also seemed like it would work - probably should investigate a
+	bit before the next release.
+
+	---
+
+	Changed handling of the typename attribute so it works when the
+	lvalue is unreadable. Think this is the only remaining attribute
+	that deserves the change.
+
+	---
+
+	Backed out the YoixSwingJComboBox.setSelectedItem() change made
+	in 2.1.9 because it introduced occasional sizing problems and
+	instead we now call repaint() at the end of setSelectedItem().
+	Also dealt with a setFont() issue in YoixSwingJComboBox.java
+	that seemed to happen because changing the font doesn't clear
+	both size caches and as a result the getPreferredSize() that's
+	implemented in Sun's plaf/basic/BasicComboBoxUI.java might not
+	notice that the font changed.
+
+	---
+
+	Trivial change to yoix.mk to make the clobber target work with
+	Sun's default make and their /bin/sh.
+
+	---
+
+	Improved the printf/fprintf/strfmt handling of double values
+	displayed using the %d specification. In particular, doubles
+	less than 1e-15 of a whole number are displayed as that whole
+	number rather than being rounded down and double values outside
+	the (Java-valued) range [Long.MIN_VALUE, Long.MAX_VALUE] are
+	displayed as a sequence of asterisks (use %g or %f rather than
+	%d to display doubles if you want to avoid the asterisks).
+
+	---
+
+	Corrected the viewrowcount in JTable for the case where a table
+	has multi-line rows.
+
+	---
+
+	Fixed some menu background color issues that were observed under
+	Mac OS X Leopard (10.5).
+
+	---
+
+	In JTable, focus loss in a cell no longer terminates editing.
+
+    Version 2.1.9 (9/28/07 - external release)
+	JTable now supports a new column type called TEXT_TYPE, which
+	uses a JTextPane to display and edit the data, thus multi-line
+	cells and cells containing HTML can be included in a table.
+
+	---
+
+	Yoix scripts providing some business graphics functionality
+	are now available for download from the Yoix web site (look
+	for the BYZGRAF links). In addition, the functionality is
+	also available to YWAIT applications.
+
+	---
+
+	A subtext built-in was added to all Swing text components to
+	facilitate extraction of a subset of text. In the case of text
+	that contains formatting directives, such as HTML, it provides
+	a way to get text with directives stripped out (unlike using
+	the text field, which would include those directives).
+
+	---
+
+	JTextPane now includes an alignment field and is also more
+	responsive to the background, foreground and font fields.
+	Explicit settings in formatted text, such as HTML, still
+	take precedence, but these fields can now set the default
+	values and also can affect lines of text within the current
+	selection or at the caret position.
+
+	---
+
+	Our JTextPane RTF behavior has been improved. In particular,
+	binary RTF can now be loaded into and extracted from the
+	component using the text field.
+
+	---
+
+	Made some changes to the low level TitledBorder font and color
+	code in YoixMakeScreen.java that make sure the look and feel
+	settings win when no font or background are specified for the
+	border.
+
+	---
+
+	The low level color support code now looks at the fields in
+	a Yoix Color object and calculates the actual field values
+	differently depending on whether it finds an integer or a
+	double. The addColor(), getBrighterColor(), getCMYKColor(),
+	getDarkerColor(), getHSBColor(), and getRGBColor() builtins
+	were also modified to behave differently when an integer or
+	double is passed as a color component argument. Take a look
+	at the reference pages for more details.
+
+	---
+
+	Added a mechanism that lets Yoix scripts align menubar items
+	to the right side of the menubar. See the JMenuBar reference
+	page for more details.
+
+	===
+
+	Made some small changes to the order that things were done in
+	YoixBodyProcess.stopProcess() that make sure Yoix scripts can't
+	accidentally use the three streams associated with a process
+	that's been officially killed.
+
+	---
+
+	Made a small change in YoixSwingJComboBox.setSelectedItem() to
+	make sure it runs in the event thread. Done because a user of
+	a large Yoix application had problems with the label painting
+	properly in a non-editable JComboBox.
+
+    Version 2.1.8 (8/28/07 - external release)
+	The line number information in many error messages has been
+	improved. We also added a command line option (i.e., --trace)
+	that can be used to request a trace of the call stack when an
+	error occurs. The option is automatically enabled when you use
+	the -g option and it can also be controlled from a Yoix script
+	using the VM.trace field. Information about all command line
+	options can be obtained using the -? or --info options.
+
+	---
+
+	We also added a --lookandfeel command line that lets you pick
+	a look and feel using the command line or a property file entry.
+	As usual, more information about all command line options can
+	be obtained using the -? or --info options.
+
+	---
+
+	Several low level debugging flags that could be set using the
+	-d command line option or VM.debug were removed or moved. Most
+	of the changes were to obscure flags that were rarely used, so
+	we doubt anyone will notice these changes.
+
+    Version 2.1.7 (8/15/07 - external release)
+	We did lots of work trying to tame the behavior of screens that
+	contain JScrollPanes, which sometimes misbehave when the screen
+	is resized. The behavior of the algorithm that we're now using
+	can be controlled by a special field named sizecontrol that we
+	added to JScrollPane and the Swing components, like JList and
+	JTextArea, that normally provide their own scrolling support.
+	The default values assigned to sizecontrol in components that
+	support the field seem to result in very good behavior, so for
+	now we're not going to document the sizecontrol field. If you
+	think you need to use it please let us know and at that point
+	we'll provide appropriate documentation.
+
+	---
+
+	Added SWEEPGRAPHS to YDAT. Also added a monitor thread that can
+	be automatically kicked off by setting MONITORTHREAD to TRUE in
+	config files. Assigning a positive number to MONITORTHRESHOLD,
+	which can also be done in config files, means the monitor thread
+	will only start if the number of bytes in the input data exceeds
+	that number. You can take a snapshot of any YDAT data screen and
+	there's a popup menu available in the snapshot screen that will
+	let you draw on the snapshot and toggle its size (also done by
+	double clicking). We included a simple example of a "histograph",
+	in which nodes in a graph are colored the way bars in a histogram
+	are, which is the behavior that's illustrated by an old example
+	on our website. Finally, the same filter/search panel that comes
+	with YWAIT tables now automatically appears on all SWEEPTABLES
+	and the appearance of various buttons and labels is controlled
+	by the variables
+
+		SHOW_SWEEPTABLE_DND
+		SHOW_SWEEPTABLE_EXPORT
+		SHOW_SWEEPTABLE_FILTER
+		SHOW_SWEEPTABLE_RESET
+		SHOW_SWEEPTABLE_ROWINFO
+		SHOW_SWEEPTABLE_SEARCH
+
+	which can be set to TRUE or FALSE in a config file.
+
+	---
+
+	Modified the execute() builtin slightly so error reporting now
+	uses the String assigned to argv[0], if it's not NULL, when the
+	source is a String or StringStream. This primarily was to fix
+	a long-standing complaint about tracking down some YWAIT errors.
+	We also added an optional name argument to the eval() builtin
+	that is used for the same purpose. See the reference pages for
+	more detail.
+
+	---
+
+	Added code to YoixBodyComponent.mouseWheelMoved() that stops all
+	MouseWheelEvents when a component has been disabled. Apparently
+	AWT components behave properly but Swing components don't. We
+	also added code to make sure scrollbars used by a JScrollPane
+	are disabled when the JScrollPane is disabled.
+
+	---
+
+	Made lots of additions and several changes to the URL type. We
+	renamed two fields
+	
+		headerfield --> responseheader
+		requestproperty --> requestheader
+
+	which probably weren't used in any real applications. We also
+	added fields named connecttimeout, readtimeout, requestmethod,
+	requestmethod, responsecode, responseerror and responsekeycase
+	and guarantee that the response information is available after
+	the URL is closed. See the reference page for more details.
+
+	NOTE - two proxy related fields were added, but the quick tests
+	that we ran didn't seem work properly. We will investigate and
+	update the reference page when we're sure they work properly.
+
+	---
+
+	Modified the open() and fopen() builtins so they accept one or
+	more key/value pairs that can be used to initialize fields in
+	the returned stream that aren't explicitly set by the builtins.
+	In addition open() now accepts a stream as the first optional
+	argument and uses it for the actual open, which can be a way
+	to recover error additional information that might otherwise
+	be lost. See the reference pages for more details.
+
+	---
+
+	Modified strjoin() and strsplit() to accept NULL arguments and
+	changed strjoin() so undefined elements in the array are skipped.
+	We also made the second strjoin() argument optional.
+
+	---
+
+	Changed the default scroll setting for JTabbedPane to AS_NEEDED
+	from NEVER. Improves layout manager behavior because AS_NEEDED
+	means vertical space for each separate tab doesn't have to be
+	reserved because the tabs don't wrap by default.
+
+	---
+
+	Added a columns field to JList that can be a useful way to set
+	the width of an empty JList. See the reference page for more
+	details.
+
+	---
+
+	Added a field named insets to JButton that can be used to adjust
+	the default padding that's added to JButtons. See the reference
+	page for more details.
+
+	---
+
+	Added infill(), ineofill() and instroke() builtins to Path that
+	pretty much duplicate the corresponding Graphics builtins, but
+	they provide a standalone hit-test capability for Paths which
+	can occasionally be convenient.
+
+	---
+
+	Added builtins named round() and iround() to yoix.math. See the
+	reference pages for more details.
+
+	---
+
+	Fixed a mistake in the implementation of the charpath() builtin
+	that led to an inconsistency in text drawn using the show() and
+	charpath() builtins.
+
+	---
+
+	Added a field named queuesize field to the Thread type. See the
+	reference page for more details.
+
+	===
+
+	Fixed a mistake in the mapping of the "ScrollPolicy" constants
+	in YoixBodyComponent.java that accidentally mapped some uses
+	of VERTICAL_AS_NEEDED and VERTICAL_NEVER to VERTICAL_ALWAYS.
+
+	---
+
+	Added code to YoixBodyComponentSwing.buttonGroupRemove() that
+	allows writing an updated items array. Prior to the change you
+	would get an invalidaccess error when you modified a non-null
+	items array.
+
+	---
+
+	We removed synchronization from ydat/SwingJDataTable.drawBar()
+	because it caused a few deadlocks. We now take a snapshot of
+	the datatable array in that method and use the snapshot, which
+	should prevent deadlock and null problems.
+
+	---
+
+	Made all variations of eval(), execute() and include() methods
+	in Yoix.java public, so Java code that belongs to someone else
+	can now easily run the Yoix interpreter.
+
+	---
+
+	Added YoixMiscJFC.getGray() that returns the NTSC gray value
+	that for rgb values. Also added pickForeground() that uses
+	getGray() to pick a foreground color that's appropriate for
+	a particular background. No Yoix script access yet, but it
+	might be worth adding a builtin.
+
+	---
+
+	Changed YoixMisc.copyIntoXXX() methods so they no longer expect
+	Vectors or Hashtables. Probably should take another look before
+	the next release.
+
+	=== TODO List ===
+
+	Tooltips don't work on YDAT background nodes and edges. It's a
+	little more complicated then you might expect, and there hasn't
+	been any real demand yet, but we eventually will get to it.
+
+	---
+
+	Seems like fields in URL (and maybe elsewhere) that are supposed
+	to be supplied as unixtime doubles might also accept date strings
+	that are parsed into unixtimes.
+
+	---
+
+	The BETA_PREFIX stuff in YWAIT may not be completely correct. We
+	will investigate and fix it in a future release.
+
+	---
+
+	The regex support for the =~ and !~ operators probably could be
+	more efficient.
+
+	---
+
+	Not convinced URL proxy related fields are all working properly.
+	Also don't forget about new ifmodifiedsince behavior - think we
+	may want to be more disciplined about time strings?? Behavior is
+	not currently documented and can safely be changed.
+
+    Version 2.1.6 (4/21/07 - external release)
+	The handling of the parent field for AWT and Swing components
+	meant there was a small chance that a parent window could be
+	disposed without it also disposing of all its children. This
+	was a rare occurrence, but when it happened it would lead to
+	a memory leak. Our Java code has been fixed, which means the
+	potential memory leak has also been plugged.
+
+	---
+
+	We made several changes in YoixBodyDictionaryObject.java that
+	were needed to fix thread related problems that only surfaced
+	in a production YWAIT application with lots of clients that all
+	worked hard for an entire 8 hour shift. Even then we only saw
+	about 10 to 15 unique occurrences per day.
+
+	While tracking this problem down we made a few changes, like
+	using a Hashtable instead of a HashMap for the nullcache in
+	YoixObject.java, that we eventually may undo when we get the
+	time and opportunity to test on the same production system.
+
+	---
+
+	We fixed a few small but annoying mistakes in YoixFontType0.java
+	that could result in pointsize mismatches between fonts used by
+	Swing and AWT components and the fonts used to draw and measure
+	text using the builtins defined in Graphics.
+
+	---
+
+	By default this version no longer has VM.fixfonts set to TRUE,
+	which means the low level font scaling adjustments that were
+	calculated during startup on some platforms are now skipped on
+	all platforms unless the +f command line option is used or
+
+	    yoix.fixfonts = TRUE
+
+	is defined in a property file.
+
+	---
+
+	We added fields named rowheightadjustment, useedithighlight,
+	and visiblewidth to JTable. We also now recognize fields named
+	inputLocale and locale in the attributes dictionary that can be
+	used by the SET_COLUMN_FIELD action to control the formatting
+	for individual columns. See the reference page for more details.
+
+	---
+
+	We added a field named selectedlabel to the JComboBox, JChoice,
+	and JList components, but we currently haven't done it for the
+	corresponding AWT components. See the reference pages for more
+	details.
+
+	---
+
+	Added read-only fields named style and size to Fonts, so you
+	no longer have to extract them from the Font's name field. We
+	also added builtins named stringwidth() and stringbounds() to
+	Fonts that behave exactly like the two builtins available in
+	Graphics. We also added a builtin named stringBounds() to the
+	yoix.graphics module, mostly because the stringWidth() builtin
+	in that module is often the way scripts measure text. See the
+	Font and stringBounds() reference pages for more details.
+
+	---
+
+	The access attribute now works even if the object that it's
+	applied to is unreadable. The old implementation failed with
+	an invalidaccess error, which really wasn't helpful if your
+	program was just trying to see if the object was readable!!
+	For the record, the access and name attributes are currently
+	the only ones that can be applied to unreadable objects.
+
+	---
+
+	Added an attribute named growable that Yoix scripts can use to
+	see if an object, like a dictionary or array, can be grown by
+	at least one element. A non-zero answer, as you would get in
+
+	    Array a[0, ...] = {"now", "is"};
+
+	    if (a@growable)
+		a[2] = "the";
+
+	means the object can accommodate at least one more object.
+
+	---
+
+	Added an optional second argument to the linesplit() builtin
+	that can be used when you're interested in recording blank
+	lines. See the reference page for more details.
+
+	---
+
+	Added a builtin named isShutdownHook() to yoix.system that can
+	be used to see if the current thread is running shutdown hooks
+	that were added by addShutdownHook(). See the reference page
+	for more details.
+
+	---
+
+	The versions of YWAIT and YDAT available in this release have
+	been improved, but there's currently no summary of the changes.
+
+	===
+
+	An interesting description of a problem that we also observed
+	in a production system that was built using YWAIT. Most of the
+	users were running Java 1.6.0, but some were using Java 1.5.0
+	and a few of them had particularly big memory leaks and the
+	explanation of those leaks can be found in
+
+	    http://weblogs.java.net/blog/enicholas/archive/2006/04/leaking_evil.html
+
+	and
+
+	    http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6209673
+
+	The hacks that are described as possible workarounds don't sound
+	all that appealing so we probably won't implement them. Instead
+	our solution, for now anyway, is to recommend that you use Java
+	1.6.X to run the Yoix interpreter, particularly for a production
+	application.
+
+    Version 2.1.5 (2/28/07 - external release)
+	We did quite a bit of work on YWAIT and YDAT in this release
+	and we also now include several YDAT examples that are hooked
+	directly up to the YWAIT demo that you can build and install
+	on your own server.
+
+	---
+
+	TimeZone has been changed and no longer supports the fields
+	that provided a way to directly manipulate daylight savings
+	information.
+
+	---
+
+	Added optional radix and fail arguments to the atoi() and
+	strton() builtins. See the reference pages for more info.
+
+	---
+
+	Added a optional second argument to UIManager.get(), that's
+	used as the return value when a key string isn't found. See
+	the reference page for more details.
+
+	---
+
+	Added code to YoixSwingJScrollPane.java that tries to improve
+	mouse wheel scrolling behavior. Linux and Windows seemed to
+	be the worst because on the systems we tested scrollAmount in
+	the MouseWheelMoved event was always set to a constant value
+	that was bigger than 1 (e.g., 3). Mac OSX never exhibited the
+	behavior that we were trying to correct, so our mouse wheel
+	scrolling aren't currently applied on that platform.
+
+	---
+
+	We addressed an annoying problem that showed up in Java 1.6
+	when you drag columns around in a table that can also scroll
+	horizontally, which seems to be caused by a mistake in Java's
+	BasicTableHeaderUI class.
+
+	---
+
+	Fixed a JTable mistake that sometimes caused problems when a
+	table was loaded after the columns had been moved.
+
+	---
+
+	Added code to YoixObject.getTransferData() that can handle a
+	function or pointer to a function as the transferable. This
+	was done so the object that's actually dropped can be picked
+	right before the drop. It's now used by ydat drag and drop
+	support code. Documentation has not been updated.
+
+	===
+
+	We added a setCursor() method to YoixBodyComponentSwing.java
+	in 2.1.4 that also changed the peerscroller's cursor. We've
+	removed the special version of setCursor(), but at the same
+	time we added YoixSwingJScrollPane.setCursor() that doesn't
+	change scrollbar cursors (from their default values). Also
+	made a change to YoixSwingJTable.setCursor() that now sets
+	the cursor in its peerscroller.
+
+	---
+
+	Added a mechanism that can be used to tell the interpreter
+	to save a limited number of the exceptions that are caught
+	internally but ignored. The debug flag DEBUG_EXCEPTIONS is
+	used to enable the mechanism. When the DEBUG_JAVATRACE or
+	DEBUG_STACKTRACE flags are used the requested dumps will
+	also be printed on stderr. We added getSavedExceptions(),
+	getSavedExceptionCount(), and setSavedExceptionLimit() to
+	yoix.system but they haven't been documented yet. Also
+	think setSavedExceptionLimit() should return the previous
+	limit. These builtins aren't currently documented, mostly
+	because our implementation may change.
+
+    Version 2.1.4 (1/25/07 - external release)
+	The most important changes this time were low level Java code
+	fixes needed before Yoix and Java 1.6.0 would be completely
+	compatible. At this point all the outstanding problems that we
+	noticed using Java 1.6.0 have been fixed, so this is the first
+	Yoix release that should work smoothly with Java 1.6.0.
+
+	---
+
+	YoixModuleImage.java no longer uses com.sun.image.codec.jpeg,
+	which triggered compilation warnings under 1.6.0 that weren't
+	suppressed by the -nowarn option.
+
+	---
+
+	Addressed a low level bug in Java 1.6.0 that seems to omit the
+	step that closed subpaths before a fill. Meant code changes in
+	in YoixBodyPath.java and ydat/SwingJGraphPlot.java.
+
+	---
+
+	Changed how a string argument is handled by the decodeImage()
+	builtin. The old version assumed a string was a file name or
+	URL that referenced the image to decode, but we now assume a
+	string is a binary representation of an Image, which is what
+	encodeImage() and encodeJPEG() return. Change was mostly for
+	consistency and means the output of encodeImage() can be used
+	as the argument that's handed to decodeImage(), but the fact
+	that decodeImage() takes a stream argument means it still can
+	be pointed at an image in a file or URL.
+
+	---
+
+	Deleted some undocumented and unimplemented builtins, namely
+	decodeGIF, encodeGIF, decodePostScript, and encodePostScript,
+	that were placeholders for builtins that we never implemented
+	and so they always aborted with an "unimplemented" error.
+
+	---
+
+	Fixed some stream, socket and popupmenu bugs that had slipped
+	into our code over the last few releases. We apologize for the
+	mistakes.
+
+    Version 2.1.3 (1/18/07 - external release)
+	Included a config file named config_clf.yx that can be used
+	to display httpd log files in the "common" or "combined" log
+	format. It's not designed for big log files, and we haven't
+	actually tested it enough to be able to tell you what the
+	limits are, but we would expect reasonable performance on
+	log files up to about 100,000 lines.
+
+	If your httpd log is small enough and in the right format
+	then something like
+
+	    ydat -cclf access_log
+
+	should pop up some interactive plots and histograms that
+	are populated data that's extracted from your log file.
+
+	We also hooked up mouse wheel zooming up to plots that are
+	controlled by an axis. By default scrolling is horizontal
+	in a plot, but you can hold the SHIFT key to get vertical
+	scrolling.
+
+	Incidentally, hitting the F2 function key in many components
+	enables or disables drag and drop out of that component (we
+	use the hand cursor to tell you when you can drag data out
+	of a component).
+
+	---
+
+	Added robot support via the new yoix.robot module and also
+	added a checkCreateRobot() security manager function that
+	can also be triggered using "robot" and the -S command line
+	option. See the reference pages for more detail.
+
+	---
+
+	The Yoix User-Agent string now uses '/' rather than space to
+	separate the product and version identifiers. Was an oversight
+	that we only recently noticed.
+
+	---
+
+	Added code to strsplit() that lets a dictionary or an array
+	of dictionaries control the splitting. Was added quickly for
+	an application that used Yoix - it may not be documented yet
+	and if not it's still subject to change. We will revisit this
+	in the near future.
+
+	---
+
+	An old one-line fix in YoixMiscTime.java was omitted in the
+	current version but it has now be restored. The following
+
+	    import yoix.util.*;
+	    double t = 3607.0;
+	    stdout.nextline = timerFormat("D'd 'Hh':'ZM':'ZS", t);
+
+	works properly if the fix is in.
+
+	---
+
+	Fixed a mistake in YoixMiscMenu.java that sometimes caused
+	the last description of a menu to be ignored. Change was in
+	the buildAWTMenu() and buildSwingMenu() methods.
+
+	---
+
+	Changed YoixTipManager.java so a "dropped tip" always shows
+	up, even when the tip wasn't visible at the time of the drop.
+
+	---
+
+	Made a small change in YoixSwingJComboBox.setSelectedItem()
+	that seems to fix an occasional problem that showed up when
+	an editable JComboBox was told (via its Yoix initializer)
+	that first item was the selected. Looks like a Java issue,
+	but we didn't try hard to track it down.
+
+	===
+
+	Removed an old static Frame in YoixImageObserver.java that
+	was no longer used but could cause loading problems when the
+	interpreter was running "headless".
+
+	---
+
+	Small style changes in YoixDragManager so labels that you get
+	from YoixDragManager and YoixToolTipManager match.
+
+	---
+
+	Modified the getLayoutSize() methods in
+
+	    YoixAWTCanvas.java
+	    YoixAWTDialog.java
+	    YoixAWTFrame.java
+	    YoixAWTPanel.java
+	    YoixAWTTextField.java
+	    YoixAWTWindow.java
+	    YoixSwingJDialog.java
+	    YoixSwingJFrame.java
+	    YoixSwingJPanel.java
+	    YoixSwingJWindow.java
+
+	so Dimensions with zero width or height fields only received
+	special treatment when we get the preferred size. The change
+	means minimumsize or maximumsize Dimensions can explicitly
+	set their width or height to zero. Negative numbers still get
+	special treatment in all cases.
+
+	NOTE - the minimumsize and maximumsize fields aren't currently
+	documented in any AWT or Swing component, so any of this can
+	still be changed.
+
+	NOTE - Java 1.5 added methods to set preferred, minimum, and
+	maximum sizes to the AWT. Prior to 1.5 only Swing components
+	could explicitly set the various sizes. In other words the
+	only way for an AWT component could control its preferred,
+	minimum, or maximum sizes was to override the Java methods
+	that returned the values. When we no longer support 1.4.X we
+	can also change how our AWT support for preferred, minimum,
+	and maximum sizes.
+
+	---
+
+	Modified YoixSwingJScrollPane.getMinimumSize() so it always
+	returns a zero sized Dimension. Previous implementation was
+	more complicated and would sometimes return the container's
+	preferred or minimum size.
+
+	---
+
+	Added a pickLayoutSize() method to YoixBodyComponent.java and
+	now use it when Swing components set their preferred, minimum,
+	and maximum sizes to a non-null value.
+
+	NOTE - this probably should eliminate the need for similar
+	code in files like YoixSwingJFrame.java that gets called when
+	one these Swing components get their preferred, minimum, and
+	maximum sizes. The ability for AWT components to set these
+	values didn't appear until Java 1.5, so the old way is still
+	needed in AWT versions of the classes, however we suspect we
+	probably can remove the code from the Swing classes now that
+	it's used in YoixBodyComponentSwing.java - later.
+
+	---
+
+	Added a Robot in YoixBodyComponent.java as part of a kludge
+	to deal with relatively obscure cursor problems after a drop
+	that happens on some versions of Linux but not on Windows or
+	Mac OSX. The behavior on Linux is fixed in 1.6.0.
+
+	---
+
+	Added compareJavaTo() builtin to yoix.util, but we omitted
+	documentation because the builtin may be removed in a future
+	release. Don't count on it until you see a reference page.
+
+    Version 2.1.2 (12/18/06 - external release)
+	Made some changes to ydat/SwingJGraphPlot.java that affect
+	the mouse wheel zoom behavior. By default zooming with the
+	mouse wheel now uses the pointer's location in the graph as
+	the point that's locked during the zoom. Holding CTRL while
+	zooming with the mouse wheel restores the previous behavior,
+	which always zoomed to the center and is still the way the
+	zoom slider works.
+
+	Using CTRL actually is somewhat convenient because holding
+	CTRL and pressing the left mouse button in some histograms
+	(e.g., the node or edge histograms in an xdot display) can
+	center and flash the graph element that you selected. Move
+	the pointer anywhere in the graph while still holding CTRL
+	and the mouse wheel zooms to the selected element because
+	it's now in the center of the graph display.
+
+	---
+
+	Added RAWSHELL_PATTERN as a flag that can be assigned to the
+	type field of a Yoix Regexp. The only difference between the
+	RAWSHELL_PATTERN and SHELL_PATTERN is that RAWSHELL_PATTERN
+	doesn't assign any special meaning to backslash. We now use
+	RAWSHELL_PATTERN to match patterns that can be specified by
+	the -S command line option, which is particularly convenient
+	if you're trying to match a Window file name using pattern.
+
+	---
+
+	Fixed a few bugs in ydat/SwingJGraphPlot.java that were all
+	related to "plaintext" nodes. The mistakes were annoying but
+	relatively obscure and for the most part only happened when
+	you tried to move a plaintext node or any node connected to
+	a plaintext node.
+
+	---
+
+	Made some changes in YoixStack.java that should eliminate
+	fatal stackunderflow errors that occasionally happened when
+	a Java method called VM.abort(). Eventually should use the
+	UncaughtExceptionHandler interface defined in Java 1.5 to
+	clean up the error output (i.e., Java stack trace and any
+	other unwanted noise), but we still support Java 1.4.X for
+	building and running the interpreter, so we'll wait a while.
+
+    Version 2.1.1 (12/12/06 - external release)
+	We're now distributing YDAT (Yoix Data Analysis Tool), which
+	is a collection of scripts and Java class files that can be
+	used to display and analyze data. Class files needed to run
+	YDAT applications are now included in the yoix.jar file that
+	can be downloaded from our web site or installed using the
+	Yoix installer. When you run the demos remember that they're
+	interactive, so try things, like holding a mouse button down
+	as you move the pointer around in a histogram or graph (the
+	the behavior of mouse buttons in a graph is controlled by the
+	JChoice that appears in the lower right corner). If you see
+	a horizontal or vertical axis press button 1 when the pointer
+	is in the narrow light-gray region (the axis slider) and move
+	the pointer. Press button 2 in that region you can drag the
+	entire slider while you're hold the button down.
+
+	When you run the installer you get a generic script named ydat,
+	several other scripts that run canned YDAT demos, and another
+	one named ydot that can be used with AT&T's graphviz software
+	to display and manipulate graphs that have been formatted in
+	the xdot output language (i.e., you used the -Txdot option
+	when you ran a graphviz program like neato).
+
+	YDAT uses config files to describe the data that its supposed
+	to display, and right now the config file for graphviz xdot
+	output is the only generally useful one that comes with this
+	release. The situation should improve in the near future and
+	we hope to provide more YDAT documentation and info about the
+	config files that should let you customize YDAT and display
+	your own data. In practice it's not all that difficult and a
+	custom config file can often be built and tested in several
+	hours, however without any documentation it would be a rather
+	difficult task.
+
+	One final note - the YDAT related Yoix scripts end up in the
+	directory named ydat/scripts after you run the installer and
+	the scripts that run YDAT point at ydat/scripts/ydat.yx. The
+	entire ydat/scripts directory can be moved to a web server if
+	you want and the definition of HOME in ydat.yx is the only
+	thing you have to change when the files are moves to the web
+	server. Point the various ydat scripts in the bin directory at
+	the ydat.yx script on the server and YDAT will no longer be
+	using the locally installed Yoix scripts.
+
+	---
+
+	Fixed a minor mistake in our low level Java code that sometimes
+	failed to propagate settings, like the background or foreground,
+	to the components in a container. The mistake was introduced in
+	our last release and was hard to trigger, so we doubt anyone
+	noticed yet, but we recommend that you upgrade to this release
+	if you're currently running 2.1.0.
+
+	---
+
+	Added a special category named cwd to YoixSecurityOptions.java
+	that can be used when you want to apply security settings to
+	the files and subdirectories under where the user was when the
+	Yoix interpreter was started.
+
+	===
+
+	Made a small change in the way Yoix.execute() handles security
+	errors when they happen in a try/catch.
+
+	---
+
+	Changed convertRowIndexToModel() and convertRowIndexToView()
+	from protected to public so everything compiles under 1.6. The
+	Problem happened because the methods didn't exist in 1.5, but
+	Sun added JTable sorting in 1.6.
+
+    Version 2.1.0 (12/7/06 - external release)
+	The new --applet command line option tells the interpreter to
+	run scripts as applets rather than applications, which implies
+	(but does not guarantee) stricter security checking. Once the
+	interpreter is booted this option installs a security manager
+	(see file YoixSecurityManager.java) that tries to enforce the
+	security policy described by the Java policy files that are
+	installed on your system, optionally modified by -S command
+	line options that precede the --applet option. For example,
+
+	    yoix -Sallow:readproperty -Sprompt:read --applet example.yx
+
+	allows reading of individual system properties, prompts with a
+	dialog before a local file is read, but it otherwise tries to
+	enforce the security policy described by the Java policy files
+	that are installed on your system. Detailed information about
+	all options, including -S and --applet, is written to standard
+	output when the interpreter encounters the --info command line
+	option.
+
+	The security related features that we added this release meant
+	a major overhaul of two Java files that the interpreter uses to
+	implement security features, namely YoixSecurityManager.java and
+	YoixSecurityOptions.java. Questions about our implementation can
+	probably be answered by taking a careful look at these two files,
+	which come with the Yoix source code package. Remember, you don't
+	get guarantees with open source software, but you do get to look
+	"under the hood" if you want and decide for yourself.
+
+	One other point that we should mention is that the interpreter
+	currently can't finish its required initialization if you use a
+	command line option to ask Java to install a security manager.
+	Even something that looks like it should work, namely
+
+	    java -Djava.security.manager=att.research.yoix.YoixSecurityManager
+
+	won't because there aren't any hooks in YoixSecurityManager.java
+	that skip checks if the interpreter appears to be booting. Since
+	the interpreter runs without a security manager for a while, if
+	you've decided to look at our Java code you probably also should
+	follow it from startup in YoixMain.java to the security manager
+	installation, which for an applet happens when YoixVM.prepareVM()
+	triggers a YoixSecurityManager.setSecurityManager() call.
+
+	---
+
+	We added two Perl-like operators, namely =~ and !~, that compare
+	a String, int, or double to a regular expression that can be
+	represented as a String or Regexp. For example,
+
+	    import yoix.*.*;
+
+	    while ((str = readLine(stdin)) != NULL) {
+		if (str =~ "[^0-9]")
+		    fprintf(stderr, "input |%s| isn't all digits\n", str);
+	    }
+
+	reads lines from stdin and writes a message to stderr when any
+	line contains a character that isn't a digit. The =~ and !~
+	operators are documented in the "operators" reference page that
+	can be found in the grammar section.
+
+	---
+
+	We added two new string quoting mechanisms, namely @<...>@ and
+	@<<...>>@, that resemble a quoting mechanism that's available
+	in Daytona. We also added a reference page named "quotes" to the
+	grammar section that describes the quoting mechanisms available
+	to Yoix scripts.
+
+	---
+
+	Our GridBagLayout implementation now supports a flexible style
+	that can sometimes lead to compact descriptions of a container's
+	layout. This is often true for JPanels that display a series of
+	labeled JTextFields or a row of JChoices separated by strings.
+	See the documentation for more details. Unfortunately we haven't
+	time to convert our existing examples or convert most of YWAIT
+	screens, but there is at least one substantial application that
+	we know of that is now extensively using the new style.
+
+	Supporting the new the style meant disabling the GridBagLayout's
+	support for the fronttoback field. We seriously doubt anyone is
+	using fronttoback, which was mostly a kludge for printing that
+	we added to our early releases. We probably will disable support
+	for it in all layout manager in the near future and the field
+	itself may also disappear unless we get complaints from users.
+
+	---
+
+	Every layout manager now accepts a string where a component is
+	supposed to be and they use that string as the text displayed
+	by a label. Properties, like the font or foreground color, used
+	by these short-hand labels can't be directly specified, so they
+	are inherited from the enclosing container.
+
+	---
+
+	Added iconified, maximized, and autodeiconify fields to JFrame
+	and Frame. The default setting of autodeiconify is TRUE, which
+	means iconified frames are now automatically deiconified when
+	TRUE is stored in their visible field. See the reference pages
+	for more details.
+
+	---
+
+	Added a builtin named queueOnce() to Thread that can be called
+	when you want to make sure an action, as described by a function
+	and its arguments, is only queued once. queueOnce() compares its
+	arguments to actions that are queued or running and only queues
+	the arguments if they're not found. Most of the YWAIT screens
+	now use this builtin (via the QueueCommandOnce() function) when
+	the user does something, like press a button, that contacts the
+	server.
+
+	---
+
+	Added the root itself to the components dictionary so that the
+	root component can be referenced by its tag in the components
+	dictionary the same as other components. This was needed when
+	we implemented the YWAIT NewJTabbedPane2Screen() "constructor"
+	that lets users drag one or more of the JPanels managed by a
+	JTabbedPane into their own JFrames. It's a unique new feature
+	that we added to YWAIT in this release, but right now you may
+	have to build your own example using NewJTabbedPane2Screen()
+	to see how interesting it really is. We will try to build an
+	example YWAIT screen in a future release, but we probably won't
+	get time to do it until early next year (2007).
+
+	---
+
+	Made some Java code changes that improve the behavior of our
+	JTabbedPane. We also decided to change the default UIManager
+	setting for the "TabbedPane.contentOpaque" property from true
+	(Java's choice) to false, which we think is more appropriate.
+	Yoix applications can add
+
+	    VM.screen.uimanager.put("TabbedPane.contentOpaque", TRUE);
+
+	if they want to restore Java's default.
+
+	---
+
+	Changed behavior of JChoice and JComboBox slightly to match
+	the behavior of AWT components (e.g., Choice and List) when
+	a "label" string (i.e., one of the displayed text strings) is
+	stored in the selected field. The old implementation for the
+	Swing components didn't recognize "label" strings, but we now
+	also look through the displayed text strings before deciding
+	that a string can or can't be displayed by the component.
+
+	---
+
+	Added lots of new attributes to JTableColumn: zeroNotShown,
+	overflow, underflow, inputFormat, lowSubstitute, highSubstitute,
+	timeZone, inputTimeZone. See the SET_COLUMN_FIELD description
+	under the action() builtin in the JTable reference page for
+	more details.
+
+	---
+
+	Added a builtin named findNextMatch() and fields named extent,
+	origin, viewport, and viewrowcount to JTable. See the reference
+	page for more details.
+
+	---
+
+	Added JList, JScrollPane, JTable, JTextArea, JTextPane, and
+	ScrollPane to the collection of AWT and Swing components that
+	support the adjustmentValueChanged() event handler. Also added
+	an orientation field to AdjustmentEvent so an event handler in
+	these components can figure out which scrollbar triggered the
+	AdjustmentEvent that they received.
+
+	---
+
+	New csvsplit(), htob(), and linesplit() builtins were added to
+	yoix.string. See the documentation for more details.
+
+	---
+
+	Added a distance() builtin to yoix.awt and yoix.swing. See the
+	reference page for more details.
+
+	---
+
+	Changed the toFront() and toBack() builtins so they no longer
+	complain if they're handed a NULL argument.
+
+	---
+
+	Calendar and TimeZone were updated in this release, so take a
+	look at the reference pages if you're using either one.
+
+	---
+
+	We finally documented the getArrayBands() builtin, which first
+	appeared in yoix.util in release 1.3.0, but for some reason a
+	reference page was never written.
+
+	---
+
+	Added code to YoixBodyComponent.handleDnDEvent() that stops all
+	drag and drop events when a component has been disabled.
+
+	---
+
+	Removed the field named specials from JTable in favor of the
+	column specific lowSubstitute and highSubstitute attributes
+	that are now supported by JTableColumn.
+
+	---
+
+	Removed the getSecurityManager() builtin and changed the value
+	returned by setSecurityManager() and setSecurityChecker() so
+	1 indicates success and 0 indicates failure. Applications that
+	need to install their own security manager or security checker
+	must use the value returned by these builtins to verify that
+	the operation succeeded. If the interpreter is running as an
+	applet (i.e., the --applet command line option was supplied)
+	then these builtins will always return 0 to indicate failure.
+
+	===
+
+	Fixed a mistake in 'for (ptr in dict)' loops that resulted in an
+	infinite loop when continue was used inside the loop.
+
+	---
+
+	Fixed a thread issue in our low level setup for https that meant
+	the setup might not finish before the interpreter tried to open
+	a script that needed the https support. This was most likely to
+	happen when the command line script needed https support, but it
+	wasn't restricted to that case and the incorrect behavior wasn't
+	always reproducible.
+
+	---
+
+	Removed a typecheck error when a dialog or window's parent was
+	disposed before the screen was built. Seems reasonable and was
+	done to eliminate an error message in YWAIT applications if a
+	dialog's parent was disposed before the dialog was even built.
+	It's something that might happen when a database query takes a
+	long time and the user gets impatient.
+
+	---
+
+	We added YoixSwingJScrollPane class to compensate for annoying
+	layout behavior that occurred when layout managers asked a
+	JScrollPane for its minimum size. Unfortunately JViewport.java
+	(actually ViewportLayout.java) returns a 4x4 pixel square as
+	its minimum size, which really didn't seem like the best answer
+	for most situations.
+
+	---
+
+	Fixed a typo in YoixBodyStream.cancelOutputInit() that mistakenly
+	used inputinit instead of outputinit in the initial test.
+
+	---
+
+	Fixed a spelling typo in the string associated with N_ICONIFIED.
+	The old version spelled it "iconfied" even though the constant
+	was spelled properly. The mistake only affected JInternalFrame,
+	which isn't used much, so we doubt the change will affect anyone.
+
+	---
+
+	Added several public variations of call() to YoixMisc.java. They
+	are particularly helpful when writing custom modules. We should
+	take a look at all similar call() methods that are currently
+	defined and probably should use the ones in YoixMisc whenever
+	possible,
+
+	=== TODO List ===
+
+	Thread.queue() should accept a pointer to a function. Should also
+	make sure other similar cases (if any) behave the same way. This
+	has been on our list of things to do for a while now - sorry.
+
+	---
+
+	Consider adding support for Java's SpringLayout.
+
+	---
+
+	Consider adding support for InputMap to all Swing components.
+	Definitely not urgent.
+
+	---
+
+	JComboBox recognizes focusaction but it's not documented. Don't
+	know if the omission was intentional?
+
+	---
+
+	Disable fronttoback, delete the field from all containers, and
+	remove it from all reference pages unless users complain.
+
+	---
+
+	Decide what should happen to the JTable OBJECT_TYPE support that
+	was added quickly for a YWAIT application but is no longer used.
+	Also ended up adding pickSortObject() and pickTableObject() to
+	JTableColumn as part of the support. This is undocumented stuff
+	that probably will be changed or removed in the near future, so
+	don't use it!!
+
+    Version 2.0.3 (8/16/06 - external release)
+	Improved how Canvas and JCanvas handling itemStateChanged() when
+	sticky is set to TRUE, which makes simulating a checkbox easier.
+	Definitely not a big deal - in fact we suspect we're the only
+	ones that use this feature and we only occasionally need it in
+	customs screens that are built for YWAIT.
+
+	---
+
+	Fixed a careless mistake in YoixBodyBlock.restoreLvalues() that
+	could accidentally raise the access permissions associated with
+	a thread. This fix, on its own, is a good reason to upgrade to
+	this release.
+
+	---
+
+	We added an accelerator field to JMenuItem and changed the Java
+	code that builds menus from Menu arrays to accept a dictionary
+	as the second argument, which means accelerators can be defined
+	when menus are described by a Menu. See the JMenuItem and Menu
+	reference pages for more details.
+
+	---
+
+	Added fields named insets and bounds to the VM.screen dictionary
+	that can help account for the decorations that a window manager
+	adds to the screen. The VM.screen.bounds Rectangle incorporates
+	VM.screen.insets, so it's probably the only one you need to use.
+
+	Unfortunately Java doesn't seem to get a good answer from some
+	window managers (e.g., Gnome on Linux), so these values aren't
+	as helpful as you might expect. Our current implementation also
+	just takes a snapshot of the values when the interpreter starts,
+	so changes to the configuration of your window manager while the
+	interpreter is running won't be reflected in VM.screen.insets or
+	VM.screen.bounds. We eventually will change our implementation,
+	but we don't consider it urgent because we don't always get good
+	numbers back from Java.
+
+	---
+
+	Added code to our Java implementation of printf() to handle NaN
+	and Infinity properly. Our old implementation printed nonsense
+	numbers for those special cases.
+
+	---
+
+	The htoa() and urlDecode() now return "" when they're handed a
+	zero length string. The old versions returned NULL, which meant
+	that
+
+		atoh(htoa(""))
+
+	or
+
+		urlEncode(urlDecode(""));
+
+	would fail because atoh() and urlEncode() complained when they
+	were handed a NULL argument. The change means atoh() and htoa()
+	are inverses, as are urlEncode() and urlDecode().
+
+	---
+
+	The BETA_PREFIX variable that's defined in the YWAIT makefiles
+	now works properly. It can be used to build and install a test
+	version of the server code that runs in the same directories as
+	a production version.
+
+	===
+
+	Improved strsplit() and JTree loading speed for large sets of
+	data by replacing the growable array or dictionary used by our
+	internal implementation with a large ArrayList or HashMap that
+	is only copied into the Yoix array or dictionary at the very
+	end. Performance issues can be noticeable because by default
+	Yoix arrays and dictionaries grow one slot at a time (unless
+	asked to do otherwise), which can result in a big performance
+	hit if it has to be done often.
+
+	---
+
+	The initialization of selected for JMenuItem in YoixModuleSwing
+	now matches JButton (i.e., it's NULL) so Yoix initializers can
+	set either state or selected fields and the interpreter will be
+	able to tell which one was set. The state field wins if both
+	fields are set in the initializer.
+
+	---
+
+	Added public strfmt() methods to YoixMiscPrintf.java as a way
+	for Java code to easily access printf() capabilities.
+
+	---
+
+	Added a reflection call to YoixAWTInvocationEvent.run() that
+	provides an easy way to handle invokeLater(). Sometimes helps
+	when you're writing a custom module.
+
+	---
+
+	Added YoixTipManager class that currently is used by a custom
+	module, however we plan on providing Yoix script level access
+	to the capabilities in the near future.
+
+	=== TODO List ===
+
+	Look for other instances of internal code that use growable
+	arrays or dictionaries and change the implementation if they
+	could be forced to do lots of growing. Performance issues can
+	start appearing when the Yoix arrays or dictionaries have to
+	get big but are forced grow one slot at a time.
+
+	---
+
+	Consider adding field named text to a JTree that can be used
+	to build the tree from a relatively simple text representation.
+	The idea is illustrated in the jtree2.yx example, but it's not
+	exactly what we want. Needs careful thought before Java code is
+	added to our JTree implementation!!
+
+    Version 2.0.2 (4/25/06 - external release)
+	We made several small changes to the YWAIT package that were
+	needed to support an existing application that had been written
+	using an old (and unreleased) version of YWAIT.
+
+	---
+
+	Fixed an obscure stream related bug that affected streams that
+	were opened for reading and writing. The mistake was introduced
+	in version 2.0.0.
+
+	---
+
+	We made a small change that improves the appearance of some
+	JComboBoxes in the Aqua look-and-feel that's available on OSX.
+
+    Version 2.0.1 (4/20/06 - external release)
+	Fixed several mistakes in the YWAIT package that made builds
+	on Solaris fail when Sun's versions of make or /bin/sh were
+	used. We also changed the YWAIT cgi scripts, which are small
+	shell scripts, so they no longer use features that require
+	ksh or bash.
+
+	---
+
+	There only source code changes that we made in the interpreter
+	were so insignificant that they don't even deserve a mention.
+
+    Version 2.0.0 (3/29/06 - external release)
+	The interpreter's command line option processing has changed
+	in this release. Many obscure options are no longer supported
+	or are now only available using long options. A summary of the
+	available options can be obtained using -? or --help. Scripts
+	that start the interpreter using options that were removed or
+	moved will definitely need attention.
+
+	The changes were introduced after long options were added to
+	the Yoix getopt() builtin. The Option and getopt() reference
+	pages describe the new features that are available to Yoix
+	scripts.
+
+	---
+
+	We claimed "in" and "by" as new reserved words and we use them
+	in a modified version of a for loop that eliminates some of the
+	overhead involved in a standard for loop. The syntax is
+
+		for (name in expression) {
+		    ...
+		}
+
+	or
+
+		for (name in expression by expression) {
+		    ...
+		}
+
+	The first expression is required and must evaluate to a Pointer
+	(e.g., an Array or Dictionary) that's the target of the for loop.
+	The optional second expression must evaluate to a number that's
+	used as the loop increment, which is 1 by default. Inside the
+	loop name is a read-only pointer that can be dereferenced when
+	you want access to the next element in the target object.
+
+	For example, the standard for loop
+
+		import yoix.*.*;
+
+		Pointer ptr;
+
+		for (ptr = VM; ptr@sizeof > 0; ptr += 3)
+		    printf("%s=%O\n", *ptr@nameof, *ptr);
+
+	that dumps every third element in the VM dictionary can also be
+	written as
+
+		import yoix.*.*;
+
+		for (ptr in VM by 3)
+		    printf("%s=%O\n", *ptr@nameof, *ptr);
+
+	using the new for loop notation.
+
+	---
+
+	The overall performance of the interpreter has improved, but
+	there's still quite a bit more that could be done. We plan on
+	continuing the performance improvements, but they're really
+	not a high priority because we believe the Yoix interpreter
+	already performs remarkably well in applications, like YWAIT,
+	that it was designed for. If you disagree let us know - we
+	can easily shift our priorities if there's a real demand.
+
+	---
+
+	Low level interpreter code that tries to calculate a single
+	platform dependent font scaling factor has now been enabled.
+	This is a change from earlier releases so you there's a small
+	chance you'll notice a difference, however in most cases we
+	expect any noticeable changes will be an improvement. The -f
+	or --fixfonts command line options let enable or disable this
+	font scaling.
+
+	Unfortunately, Java 1.4.X running on Linux sometimes seems to
+	use different size fonts in AWT and Swing components. In other
+	words, tell a Swing and AWT component to use exactly the same
+	font and if you're using 1.4.X on Linux you may end up with
+	different results in the two components. We haven't observed
+	the behavior in 1.5.0.
+
+	---
+
+	Added keystore support to the Yoix interpreter, which means
+	SSL certificates can be managed pretty much the way browsers
+	do. Users are always prompted with information about a new
+	certificate before it's stored the interpreter's keystore.
+
+	We also added the --acceptcertificates option that tells the
+	interpreter to silently accept certificates without storing
+	them in the keystore. It's a special purpose option that's
+	really only designed for a program, like a web crawler, that
+	reads web pages and doesn't want to be prompted by every new
+	certificate.
+
+	---
+
+	We made low level encoding changes that separate the encoding
+	that the parser uses to read a script from the encoding that
+	the interpreter uses when it reads streams. The names of the
+	encodings used to read scripts and streams are stored in
+
+		VM.encoding.parser
+
+	and
+
+		VM.encoding.stream
+
+	as strings that can be read or written by Yoix scripts or set
+	using the --parserencoding and --streamencoding command line
+	options. Two other values in VM.encoding, namely
+
+		VM.encoding.JVM
+
+	and
+
+		VM.encoding.VM
+
+	are read-only strings that record the default encoding used by
+	Java and the Yoix interpreter.
+
+	We also added a builtin named getAvailableCharsets() to yoix.io
+	that provides a complete list of the encodings that your system
+	recognizes. See the reference page for more details.
+
+	---
+
+	Added fields named uimanager and headless to VM.screen. The
+	uimanager field means scripts no longer have to create their
+	own UIManager when they want to query or change the look and
+	feel. The headless field will be non-zero whenever the Yoix
+	interpreter is started in an environment that doesn't support
+	a display, keyboard, or mouse.
+
+	---
+
+	Added a theme field to UIManager, so yoix scripts can select
+	various themes that may be supported by a look and feel. The
+	"Metal" look and feel available in Java 1.5 is the only one
+	that currently supports themes and the only working themes
+	that we found were "Ocean" and "Steel".
+
+	---
+
+	Made changes to UIMamanger so fonts for each LookAndFeel are
+	scaled based on the command line magnification and platform
+	dependent scaling. Done for consistency and to fix JOptionPane
+	fonts, which on Linux were often way too small. Changes mean
+	supported UIMananger look-and-feels should be thought of as
+	being created when the interpreter boots, so fonts in those
+	look-and-feels won't be affected when a Yoix script changes
+	VM.fontmagnification.
+
+	---
+
+	Added autotrim, selectedends, and text fields to a JComboBox
+	that duplicate the behavior of the fields in other component
+	(e.g., JTextField). It also now supports a textValueChanged()
+	event handler, which really only makes sense if the JComboBox
+	is editable. The changes make it easier for a GUI application
+	to switch between using a JTextField and a JComboBox. See the
+	reference page for more details.
+
+	---
+
+	We added a field named persistent to the Process and Socket
+	types. Setting persistent to TRUE tells the Yoix interpreter
+	it shouldn't explicitly stop a Process or close a Socket when
+	the interpreter exits. See the reference page for more details.
+
+	---
+
+	Added a read-only field named focusowner to all AWT and Swing
+	components that can be read to determine if component has the
+	keyboard focus.
+
+	---
+
+	Added a field named reset to JColorChooser that can be used to
+	reset the reference color that the JColorChooser displays. We
+	also added support for the stateChanged() event handler. See
+	the reference page for more details.
+
+	---
+
+	Added a field named altgridcolor and action named MOVE_COLUMN
+	to JTable. See the reference page for more details.
+
+	---
+
+	Added a builtin named fmt() to yoix.string that can be used to
+	break or consolidate text so each line fits within limits that
+	can be specified in the call. This can be a convenient way to
+	prepare text that is supposed to be displayed in a component,
+	like a JTextArea. See the reference page for more details.
+
+	---
+
+	Added a builtin named addShutdownHook() to yoix.system that
+	arranges for Yoix functions to be called right before the
+	Java virtual machine shuts down. See the reference page for
+	more details.
+
+	---
+
+	Added builtins named addListener() and removeListener() to
+	yoix.awt and yoix.swing. The addListener() builtin lets you
+	add new listener to an existing AWT or Swing component, which
+	is something that was not allowed in previous releases. See
+	the reference pages for more details.
+
+	---
+
+	Added a builtin named nanoTime() to yoix.system that can be
+	used to measure time intervals in nanosecond precision. See
+	the reference page for more details.
+
+	---
+
+	Added a builtin named getColorName() and updated the addColor()
+	builtin, both of which are defined in yoix.awt and yoix.swing.
+	See the reference pages for more details.
+
+	---
+
+	Added builtins named htmlEncode(), htmlDecode() to yoix.string.
+	See the reference pages for more details.
+
+	---
+
+	New builtins named encodeImage() and decodeImage() were added
+	to yoix.image. See the reference pages for more details.
+
+	---
+
+	Added an optional int argument to stringbounds() that can be
+	set to non-zero when you want the rectangle to be a tight fit
+	to the text string. By default the fit is loose, with font
+	properties, like ascent and descent, controlling the vertical
+	span of the rectangle. 
+
+	---
+
+	The Tree type has been renamed ParseTree, so Yoix scripts that
+	used Tree variables must be changed. We doubt this will affect
+	any external applications.
+
+	---
+
+	Simple grammar change lets global and restricted blocks omit
+	the lvalue (usually a dictionary). Changes were easy but may
+	not be all that useful, except to run quick interactive tests.
+
+	===
+
+	Fixed the low level implementation of the charpath() builtin
+	in YoixFontType0.java, which built a FontRenderContext that
+	always disabled antialiasing and fractionalmetrics, even if
+	they were enabled in by the appropriate Graphics object. The
+	mistake meant that measurements, like pathbbox(), taken from
+	a charpath() path wouldn't necessarily hold when the same
+	text was rendered using show().
+
+	---
+
+	Fixed a mistake in the translatepath() builtin that omitted
+	using the currentmatrix to transform its arguments to device
+	space. Was really inconvenient (and wrong) because skipping
+	the step meant the were always assumed to be in device space.
+
+	---
+
+	Fixed a gvsubsti bug that made it misbehave rather badly when
+	no pattern was set in its Regexp argument.
+
+	---
+
+	A late change in YoixVM.java restricts the platform dependent
+	font scaling factor to a number greater than or equal to 1.0.
+	Only happens when N_FIXFONTS is 1, so we might provide a way
+	to set it to something other than TRUE and FALSE?? Not 100%
+	convinced by the changes.
+
+	---
+
+	Changed calculation of getPreferredScrollableViewportSize() in
+	YoixSwingJTextArea.java so it matches getPreferredSize(). Swing
+	currently (i.e., in 1.5.0) omits margins when determining the
+	JTextArea's preferred size for a JScrollPane, so you normally
+	end up with a vertical scroll bar in a JTextArea that has rows
+	and insets set.
+
+	---
+
+	Made several low level changes to help with "skins". One was
+	to apply opaque setting for a screen to it's menubar if the
+	menubar hasn't explicitly set its opaque field to a non-NULL
+	value. The other change was to YoixMiscJFC.paintBackground()
+	and all we now do is check the component's opaque setting
+	before painting.
+
+	---
+
+	Added a field named uimkey to Swing and AWT components. It's
+	not documented yet because we're not convinced it's a useful
+	addition, which means it may disappear in future releases and
+	that means you shouldn't use it!!
+
+	---
+
+	Added an optional argument to cstring() builtin. Currently
+	undocumented and not used, so there's a good chance it will
+	be removed in a future release.
+
+	=== TODO List ===
+
+	Converting our FontMetrics code to LineMetrics should let us
+	remove an undocumented option that may still be needed by an
+	old (but important) application. Probably won't be difficult,
+	but that old application will need lots of testing.
+
+	---
+
+	Eventually may want to synchronize some of the addListener()
+	methods in YoixBodyComponent.java. The addListener() builtin
+	can now test and set bits in event mask and the way it's done
+	right now may not be completely thread safe. Definitely good
+	enough for now, but we eventually should revisit this.
+
+	---
+
+	Not convinced there's an easy way to get a copy of a path.
+	Reading Graphics.path doesn't return a snapshot - maybe it
+	should?? Something to investigate.
+
+	---
+
+	Added setPrebootAcceptCertificates() and called in YoixMain.
+	Done slightly differently the other prebootXXX, but it looks
+	like there should be a better way. We eventually clean this
+	up, probably by providing a method in YoixModule.java that
+	can access values stored in $init[] tables - later.
+
+	---
+
+	Consider renaming EMPTY and all related stuff. Seems like
+	VOID would be better. Also added isEmptyString() method
+	to YoixObject.java. Think the length() test can be changed
+	slightly (do we need to do stringValue()??). Also may want
+	other methods (e.g., isEmptyArray(), isEmptyDictionary()).
+	Just a thought - definitely not important.
+
+    Version 1.4.0 (11/14/05 - external release)
+	This release no longer runs under Java 1.3.1, which means
+	we don't need reflection to support features that appeared
+	in Java 1.4 (e.g., encryption, new event modifiers, better
+	sockets). All the reflection used to provide runtime support
+	for Java 1.3.1 has been removed from the source code.
+
+	---
+
+	You'll find extensive cryptographic support in this release
+	using the new Certificate, Cipher, Key, and KeyStore types
+	and the constants and builtins that are defined in the new
+	yoix.secure module. See the reference pages for more details.
+
+	---
+
+	DatagramSocket, ServerSocket and Socket have been improved
+	and they all now provide complete support for features that
+	were added in Java 1.4. Part of the cleanup work removed or
+	renamed several fields that we supported in older versions,
+	so applications that use any of the Yoix sockets will need
+	some minor changes before they will run under this release.
+	See the reference pages for more details, including a list
+	of the fields that changed or disappeared.
+
+	Please send us mail if you have a socket application that
+	breaks in this release - we undoubtedly can help and don't
+	mind hearing complaints about our incompatible changes.
+
+	---
+
+	MulticastSocket is new and can be used to send and receive
+	multicast UDP packets. Our simple tests on Windows and OSX
+	seemed to work, but we were not able to receive multicast
+	UDP packets on any Linux system that we tried. We suspect
+	the behavior is related to issues described in the 4701650
+	Java bug report. See the reference page and the bug report
+	for more details.
+
+	---
+
+	Random is a new type defined in yoix.math that can generate
+	pseudo-random and "cryptographically strong" random numbers.
+	It was added as part of our new cryptographic support, but
+	can be used whenever an application needs random numbers.
+	See the reference page for more details.
+
+	---
+
+	We added seven new builtins (e.g., getInterfaceAddresses(),
+	isLinkLocalAddress()) to yoix.net. See the reference pages
+	for more details.
+
+	---
+
+	DragGestureEvent, KeyEvent, MouseEvent, and MouseWheelEvent
+	define a new field named modifiersdown that represents the
+	state of all keyboard modifiers and mouse buttons when the
+	event occurred. See the reference pages for more details.
+
+	---
+
+	File, URL, and StringStream have a field named interrupted
+	that is incremented when a read operation is interrupted.
+	See the reference pages for more details.
+
+	---
+
+	The low level code that tries to compensate for font size
+	mistakes across platforms has been improved and is enabled
+	by default. The -f command line option or "fixfonts" property
+	file entry can be used to disable the font size adjustments
+	and means you get exactly what Java would give you when you
+	ask for a font. We also fixed a mistake that failed to apply
+	the font size adjustments to the Java font that windows use
+	when their font field is set to NULL.
+
+	---
+
+	We made "restricted" a keyword that is used to start a named
+	block that behaves like a "global" named block but is subject
+	to some restrictions. For example, include, import, try/catch,
+	and global named blocks are not allowed, reserved values like
+	execute(), stdin, stdout, stderr, and yoix will be NULL, and
+	others, like typedict and argv, start with restricted values.
+	A Yoix script that uses a restricted block can pass objects
+	into the restricted block by storing them in the dictionary
+	that's used for the block's storage, so the Yoix script has
+	the final say over how "restricted" the block really is.
+
+	---
+
+	Added code that lets Yoix scripts catch SecurityExceptions
+	using try/catch. This eventually may be expanded to include
+	more (perhaps all) Java Throwables, but we didn't have time
+	right now to implement and test everything.
+
+	---
+
+	We improved the Yoix installer and added controls that let
+	you pick the default font magnification. The installer has
+	always been included in the source code that we distribute
+	and now you can build an installer using the makefile that
+	we distribute with the installer source code.
+
+	---
+
+	Made several changes to our Java code that gets called to
+	interpret the mouse buttonmodel that can be set using the
+	-b command line option or the "buttonmodel" property file
+	entry. The default buttonmodel is now 0, which makes no
+	changes to event modifiers when a mouse button is pressed,
+	clicked, dragged, or moved.
+
+	The change should only affect users on a Mac who also happen
+	to have a one-button mouse. The default buttonmodel setting
+	in our previous release automatically translated a MouseEvent
+	with button 1 and the control key pressed into a MouseEvent
+	that looked like button 2 had been pressed. Unfortunately we
+	can't tell what kind of mouse generated a MouseEvent, so the
+	the translation requested by the default buttonmodel applied
+	to every MouseEvent on a Mac, even when a multi-button mouse
+	was being used. Mac users who what to the old behavior can
+	get it with -b1 command line option or "buttonmodel" property
+	file entry.
+
+	---
+
+	If you grab our source package you may notice some functional,
+	but still incomplete and undocumented Java 3D work. We hope to
+	return to the work, perhaps in a few months, but right now it's
+	not high on our list of things to do. Any help, as usual, will
+	be appreciated!!
+
+    Version 1.3.2 (8/30/05 - external release)
+	We added MouseWheelEvent to the collection of events supported
+	by the Yoix interpreter. MouseWheelEvents automatically go to
+	a mouseWheelMoved() event handler, if it's defined in an AWT
+	or Swing component.
+
+	NOTE - Java introduced MouseWheelEvents in 1.4, so you won't
+	get them if you're still using Java 1.3.1.
+
+	---
+
+	Our implementation of the "this" keyword has finally improved
+	and now handles functions that are defined in a block. Thanks
+	to Xinyu Feng for input on this one!! See the reference page
+	for a complete description of the "this" keyword.
+
+	---
+
+	Fixed a mistake that caused the urlEncode() builtin to throw
+	ArrayIndexOutOfBoundsException when it tried to encode binary
+	data.
+
+	---
+
+	Small changes to paintRect() method in YoixAWTTextComponent
+	and YoixSwingJTextComponent.
+
+	---
+
+	Added int argument to YoixMisc.javaTrace() that controls the
+	number of lines dumped.
+
+    Version 1.3.1 (8/13/05 - external release)
+	Fixed a parser mistake that meant it sometimes didn't backup
+	over lookahead that was consumed to recognize a bare if-else
+	statement. The mistake never affected if-else statements in
+	blocks (e.g., function bodies), so it really didn't happen
+	often.
+
+	---
+
+	We now compensate for subtle changes in TimeZone.getDefault()
+	and TimeZone.setDefault() that were introduced in Java 1.5.0.
+	We're not sure why Sun made the Thread-based TimeZone changes
+	in 1.5.0, but Yoix scripts now will not notice them.
+
+	---
+
+	The setTimeZone() builtin was changed slightly and now takes
+	a missing or NULL argument as a request to reset the timezone
+	to the original system default.
+
+	---
+
+	Implementation of setOrigin() in YoixAWTTextComponent.java
+	and YoixSwingJTextComponent.java has been improved slightly
+	and now does a better job handling scrolling under a window
+	that covers part of the component. Our solution doesn't catch
+	everything, but it's not bad and doesn't affect performance
+	much. Might not need the kludges if copyArea() was friendlier
+	and returned something that told us that the copy didn't work.
+	PaintEvents automatically generated by copyArea() don't seem
+	to be a complete solution, particularly when you're scrolling
+	rapidly.
+
+	---
+
+	Fixed a class cast mistake in YoixMake.java that sometimes
+	affected the Yoix implementation of UIMananger.
+
+	---
+
+	Fixed a small mistake in YoixBodyString.cstringValue() that
+	occasionally affected the cstring() builtin.
+
+	---
+
+	Added a kludge to YoixBodyComponentSwing.java that seems to
+	eliminate deadlock problems that occasionally happened when
+	a JFileDialog was created on a Mac.
+
+    Version 1.3.0 (7/14/05 - external release)
+	You can now add custom drag and drop handling to any Swing
+	or AWT component using Yoix versions of Java's drag and drop
+	event handlers (e.g., dragGestureRecognized(), dragEnter(),
+	drop()) that are described in their reference pages. Swing
+	components can use the new TransferHandler type or event
+	handlers when they want custom drag and drop support, but
+	the TransferHandler approach won't work with AWT components.
+
+	Everything should be documented in the reference pages, but
+	the information is spread out in a few different files. Take
+	a look at DragGestureEvent, DragSourceEvent, DropTargetEvent,
+	dragGestureRecognized(), dragEnter(), and drop() if you want
+	to know more about the event handlers. Otherwise look at the
+	TransferHandler reference page.
+
+	---
+
+	Added a field named dragenabled to all Swing components that
+	can be set to TRUE when you want to enable Swing's automatic
+	drag handling. Components that don't provide automatic drag
+	handling always return FALSE when their dragenabled field is
+	read, even immediately after you store TRUE in that field.
+
+	---
+
+	We added a Clipboard type and a getSystemClipboard() builtin
+	in yoix.system that can be used for cut and paste operations.
+	The details are described in the reference page.
+
+	---
+
+	Custom cursors are now available. They can be built using an
+	Image and assigned to to the cursor field that's defined in
+	all AWT and Swing components. The reference pages have all
+	been updated and there's at least one non-trivial example in
+	the Image reference page, which is a good place to start. Pay
+	close attention to the hotspot, paint, size, and type fields
+	that are defined in an Image - they're often the most useful
+	when you're building a custom cursor.
+
+	---
+
+	A new builtin named addCursor() is defined in the yoix.swing
+	and yoix.awt modules. It lets you add a custom cursor to the
+	official Cursor that's defined in yoix.swing and yoix.awt. We
+	also added the getBestCursorSize() and getMaximumCursorColors()
+	builtins that can sometimes help when you're building a cursor.
+	The getMaximumCursorColors() documentation may be missing or
+	incomplete (it sometimes gave some confusing answers that we
+	need to track down), but the other two builtins are documented
+	and there's another custom cursor example in the addCursor()
+	reference page.
+
+	---
+
+	Added a builtin named captureScreen() to yoix.image that can
+	be used to copy all or part of the screen to an image. See the
+	reference page for more details.
+
+	---
+
+	We changed our Swing border code so a border with a title is
+	created whenever a string is assigned to a Swing component's
+	border field.
+
+	---
+
+	We added a field named border to JFrame, JDialog, JFileDialog,
+	and JWindow, which means you can easily add a border to any of
+	them without having to modify the layout of their components.
+
+	We added the border field to JInternalFrame, but weren't happy
+	with the results, so it probably shouldn't be used because the
+	behavior may change in a future release.
+
+	---
+
+	JTextArea, JTextField, or JTextPane components can now define
+	a textValueChanged() event handler if they want to receive a
+	TextEvent whenever the text stored in the component changes.
+	We added fields, named length, offset, and type to TextEvent
+	that further identify what happened when something changes in
+	a JTextArea, JTextField, or JTextPane. AWT components, like a
+	TextField, that define a textValueChanged() event handler get
+	a TextEvent that includes the three new fields but they won't
+	be initialized with any useful information.
+
+	---
+
+	Changed the implementation of Graphics.erasedrawable() so it
+	erases a drawable component, like a Canvas or JFrame, using
+	the background color and the backgroundimage that are defined
+	in that drawable. Before the change erasedrawable() only used
+	the component's background color. We also made improvements
+	in the way erasedrawable() handles images, but we don't think
+	anyone will notice.
+
+	---
+
+	The value assigned to the backgroundimage field that's defined
+	in some AWT and Swing components can now be an Image, String, or
+	NULL. A string that's not NULL should name a local a file or URL
+	that contains a GIF or JPEG image.
+
+	---
+
+	Made some changes to addColor(), which now returns TRUE if the
+	color was successfully added and FALSE if the operation failed.
+	We also removed the optional hsb argument since there now is a
+	builtin named getHSBColor() that makes colors based on the HSB
+	model.
+
+	---
+
+	We documented all Yoix event handlers, including the ones that
+	handle drag and drop, added listEventHandlers() to yoix.event,
+	and moved the dictionary that maps Yoix event handler names to
+	integers to yoix.event.HandlerID from yoix.awt.Event. See the
+	reference pages for more details.
+
+	---
+
+	Added YoixPointerActive.initializer() method that sub-classes
+	can call, usually at the very end of their constructors, when
+	final initialization can be handled by a Yoix function named
+	initializer() that's defined in their data dictionary. May not
+	be used in standard Yoix classes yet, but there's at least one
+	new custom module that's currently using it. Tiny chance we'll
+	eventually implement finalizer(), but that could be asking for
+	trouble!! 
+
+	---
+
+	Made lots of changes to YoixObject.java that were designed to
+	make it usable as a superclass in custom modules. Most of the
+	changes were access related and you will now find quite a few
+	protected methods that are designed to be used by classes that
+	extend YoixObject.java. We also added an empty interface named
+	YoixAPIProtected that we used to mark classes that your custom
+	modules can extend. We haven't finished with the changes, but
+	did think they should be mentioned - we're planning many more
+	in the next release or two.
+
+	---
+
+	We also removed final from the definitions of getManageObject()
+	and body() in YoixObject. Done to let classes in other packages
+	that extend YoixObject define them as super.getManagedObject()
+	and super.body(), which will essentially give other classes in
+	the same package access to the low level YoixObject methods.
+
+	---
+
+	We collected some of the Java reflection code that we had used
+	in the interpreter and in several custom modules and put them
+	in a new file named YoixReflect.java. You might find something
+	useful there if you're writing you're own Yoix module, but it's
+	otherwise not particularly noteworthy.
+
+	---
+
+	A mistake in our IO code that slipped into our last release has
+	been fixed. We apologize for the mistake and thank the people
+	who reported the problem.
+
+	---
+
+	Noticed CUSTOM_CURSOR is defined in our Cursor dictionary even
+	though it doesn't correspond to a real cursor. Happens because
+	READCLASS (in YoixModule.java) is asked to load the integers
+	defined in java.awt.Cursor class - looks like we need a better
+	way for READCLASS to select fields. Need to think about it some.
+	A regular expression or a way (perhaps an array of 2 Integers)
+	to specify an interval probably would work. Don't get carried
+	away on this - CUSTOM_CURSOR may be the only problem and it's
+	really not a big deal.
+
+	---
+
+	Made a quick change to POINTER case in YoixObject.cast(). Done
+	on 12/15/04 (and modified again on 12/21/04) primarily to help
+	with type definitions in a j3d support module that we're still
+	working on and will eventually release. Does the CALLABLE case
+	deserve similar treatment??
+
+	---
+
+	Changed the implementation of YoixObject.newPointer() that's
+	called to handle custom modules so it first looks for a method
+	named newObject() and only tries newPointer() when newObject()
+	doesn't exist. Done to let custom modules extend YoixObject,
+	which will help make other things easier and most consistent.
+	Old modules probably should change the name of newPointer() to
+	newObject() because it eliminates an extra step. Implementation
+	also added at least one new SimpleNode constructor.
+
+    Version 1.2.1 (12/10/04 - external release)
+	Added a callback mechanism to the readStream() builtin, which
+	is documented in the reference page, and we also improved the
+	performance of the low level Java code that readStream() uses.
+	The changes mean readStream is a very efficient way to read all
+	(or part) of a Yoix stream, like a URL, and the new callback
+	mechanism makes it easy to provide progress information to the
+	users of an application.
+
+	---
+
+	The Yoix installer finally behaves properly on all supported
+	platforms when the name of the installation directory contains
+	white space characters (e.g., "Program Files" on Windows).
+
+	---
+
+	In all the older versions of YoixBodyComponentSwing.java and 
+	YoixBodyComponentAWT.java event listeners were added near the
+	end of the constructors, which sometimes happened after the
+	visibility of the window was set to true. The ordering meant
+	that there were situations when a windowOpened() event handler
+	defined in a Yoix window might not be called. A fairly simple
+	rearrangement of the Java code now adds event listeners before
+	the window's visibility is set, and that should guarantee that
+	a Yoix windowOpened() event handler is always called.
+
+	---
+
+	Removed static from YoixBodyComponentSwing.bg_dummy definition.
+	At least one substantial Swing application sometimes had memory
+	problems that were tracked down to the fact that bg_dummy was a
+	static.
+
+	---
+
+	Added JToggleButton, which is a JButton that behaves like a
+	JCheckBox.
+
+	---
+
+	Fixed a low level permissions mistake that caused freopen()
+	problems.
+
+	---
+
+	Made a small change to the menu code that tries to prevent a
+	separator from being the first entry in a menu. This was added
+	rather late, but it's such an innocent change that we really
+	don't think anyone will be adversely affected. If you disagree
+	send us mail and we will provide a workaround.
+
+	---
+
+	We changed the function dumping code in YoixBodyFunction.java so
+	parse tree is dumped when the DEBUG_PARSETREE flag is set. Was
+	done while we were debugging a problem and we decided to leave it
+	in for now even though we doubt anyone else will use it. There's
+	a pretty good chance it either will disappear or be improved in
+	our next release.
+
+    Version 1.2.0 (10/27/04 - external release)
+	Our Swing support is finally complete and almost all of it has
+	now been documented. There undoubtedly are some exceptions, but
+	for the most part any Swing class that you might want to use in
+	a Java application is available as a Yoix type. In one case,
+	namely JOptionPane, we decided that three builtins
+
+		showConfirmDialog()
+		showInputDialog()
+		showMessageDialog()
+
+	which were added to yoix.swing, would be sufficient, so there's
+	no JOptionPane type. Swing components share lots of new fields
+	(e.g., preferredsize, size, location, opaque, layer, and showing)
+	that are described in the reference pages, so we won't say more
+	here - take a look at a simple reference page (e.g., JLabel) and
+	you'll get the picture. You'll find other interesting new fields
+	(e.g., glasspane, resizable) that are only shared by top level
+	application windows (e.g., a JFrame). There's also a new layout
+	manager named BoxLayout that works with AWT or Swing components.
+
+	In addition to the standard Swing types we added several that
+	can help you convert an AWT application to Swing. For example,
+	there's a Yoix type named JChoice even though there's no Java
+	class that goes by that name. JScrollbar is another convenient
+	addition that's a synonym for JScrollBar (notice the case of the
+	'b'), which means you end up with a legitimate Swing scrollbar
+	when you add a 'J' to the front of the AWT Scrollbar type.
+
+	We also added builtins named
+
+		getBrighterColor()
+		getCMYKColor()
+		getDarkerColor()
+		getHSBColor()
+		getRGBColor()
+		getLocationInRoot()
+		getLocationOnScreen()
+
+	to yoix.awt and yoix.swing and documented each of them.
+
+	---
+
+	The -g command line option now guarantees that command line and
+	and source file information will always be available for error
+	reporting. In addition -g now also automatically generates a Yoix
+	stack trace when there's an error. Applications started with -g
+	pay a penalty when compared to applications started with the -O
+	option (they use more memory and are slower), so -g should only
+	be used when you need to debug Yoix problems.
+
+	The behavior of -O command line option has not been changed. It
+	starts the interpreter running in a way that should result in the
+	best performance (e.g., no line number or source file information
+	will appear in error messages), but Yoix programs can still make
+	changes (e.g., to VM.addtags) that can affect performance. When
+	-g and -O appear on the command the last one wins.
+
+	The -I command line option is new and it lets you point at Yoix
+	scripts in files that are included after all command line options
+	are processed, but before the input file named on the command
+	line is executed. Files included this way run in the environment
+	created for the primary input file. This option can be particularly
+	useful when no input file is named on the command line (i.e., the
+	Yoix interpreter reads from standard input) and you want a way to
+	establish a consistent environment, often for debugging purposes.
+	Multiple -I options are allowed and work as you would expect.
+
+	The -d command line option now interprets a leading 0x to mean
+	a hex number and a leading 0 to mean an octal number. See the
+	DEBUG_XXX definitions in YoixConstants.java for the current set
+	of debug flags. We made a few minor changes to the debug flag
+	definitions and added DEBUG_STACKTRACE, which lets you ask for
+	a Yoix stack trace when there's an error. Incidentally, command
+	line debug flags always end up in VM.debug, which means they can
+	be changed by Yoix scripts. For example, something like
+
+		{
+		    save VM.debug |= 0x300;	// means trace calls and returns
+		    //
+		    // Yoix code that you want to trace...
+		    //
+		    ...
+		}
+
+	changes VM.debug so the interpreter traces function calls and
+	returns, but using a save statement guarantees that the previous
+	value is restored whenever the enclosing block is exited.
+
+	We changed -V option so version information goes to stdout. Also
+	-V now just prints the version string - use +V to get a little
+	more info. As usual, running programs can find version info in
+	VM.Version.
+
+	Incidentally, all command line options are currently documented
+	in the comments near the start of YoixMain.java, which you get
+	with our source code package. In addition most of them are also
+	described in comments in the scripts that our installer leaves
+	on your system.
+
+	---
+
+	All of our installers, including the one that we distribute from
+	our web site to install the Yoix interpreter, are now executable
+	jar files. It's a big improvement that saves space and means your
+	browser may know how to install Yoix when you click on the link
+	that's used to download the installer. We also followed our own
+	advice and converted the installer to Swing, which we think is a
+	another big improvement, and made it work on a Mac running OS X.
+
+	---
+
+	The conditional expression operator (i.e., ?:) has finally been
+	fixed, so the behavior that you get from the Yoix implementation
+	of ?: now does a pretty good job matching other languages. Most
+	of the trouble happened because we tried to make ? and : behave
+	as special binary operators that the interpreter grouped into a
+	traditional ?:  (or non-traditional :?) when possible. It never
+	completely worked and ? and : weren't useful binary operators,
+	so our attempt at generality didn't add anything useful and left
+	us with a confusing ?: operator that sometimes didn't behave the
+	way you expected.
+
+	Our fix eliminated ? and : as binary operators (we really doubt
+	anyone found them useful) and :? as a non-traditional conditional
+	expression. As a result there's a small chance this version of
+	the interpreter will complain about syntax errors in scripts that
+	worked in our previous releases.
+
+	---
+
+	The interpreter now accepts
+
+	    import yoix.*.*;
+
+	which means you're asking for access to all the modules that are
+	loaded into the yoix dictionary when the interpreter boots (the
+	list is complied into the interpreter so it doesn't change). The
+	new import statement can be a convenient one-line replacement for
+	long lists of imports. We use it most of the time now so you'll
+	see it in many of our examples.
+
+	Part of the implementation of the new import statement was the
+	addition of an array named importdict to the global context. It's
+	a read-only array that's used to keep track of the dictionaries
+	that have been imported by Yoix statements that end in '.*', like
+
+	    import yoix.xxx.*;
+
+	or
+
+	    import yoix.*.*;
+
+	NOTE - an application that happened to define importdict in the
+	global context (we doubt there were any) will have to be changed
+	before it will work using this version of the interpreter.
+
+	---
+
+	You can now use a Menu (which really is just an Array with a magic
+	type name) to initialize items in a MenuBar, PopupMenu, JMenuBar,
+	JPopupMenu, and JMenu. The change simplifies the job of converting
+	an AWT application to Swing. We also modified the Java code that
+	parses Menus (i.e., the code that runs when a Menu is assigned to
+	items) so it accepts an Array or a Menu whenever it wants to find
+	the description of a submenu. We also now accept an Array, a Menu,
+	or NULL as the first (and only) element in the description of a
+	menu item.
+
+	Remember, a Menu isn't the AWT version of a JMenu, so don't change
+	Menu to JMenu when you convert an AWT application to Swing!!
+
+	---
+
+	Types that define an insets field (e.g., GridBagConstraints or
+	Border) now let you assign a number to that field when all you
+	want is a uniform margin. For example,
+
+		BevelBorder bb1 = {
+		    Insets insets = {
+			int top = 12;
+			int left = 12;
+			int bottom = 12;
+			int right = 12;
+		    };
+		};
+
+	and
+
+		BevelBorder bb2 = {
+		    int insets = 12;
+		};
+
+	both work and describe identical borders.
+
+	---
+
+	We now try really hard to give the focus to the last component
+	in a window's layout array that explicitly requests the focus
+	by setting its requestfocus field to TRUE. Done the first time
+	the window is shown or whenever the layout array is changed.
+
+	---
+
+	We made some improvements to the badcall and badargument error
+	messages and we now guarantee that both only happen in builtin
+	or function calls. The changes forced us to take a careful look
+	at our low level function code, and we ended up making several
+	changes that make function calls a little bit faster.
+
+	---
+
+	A Yoix JWindow or Window can now get the focus, which means you
+	can put a component like a TextArea in a Window and type text
+	into that TextArea. The implementation was tricky so there's a
+	chance it won't always work - Java didn't make it particularly
+	easy.
+
+	---
+
+	The exitflag field that was defined in the VM dictionary has
+	been renamed exitmodel. The behavior controlled by exitmodel
+	has not changed - allowed values are  0, 1 (default), or 2,
+	and they still control what happens when the main thread quits.
+	See the comments in YoixMain.java for more details.
+
+	---
+
+	The newline() function supported by TextTerm and JTextTerm is
+	now named afterNewline(). Applications that used newline() (we
+	doubt there were any) will have to be changed before they will
+	work with this release.
+
+	---
+
+	Several special purpose builtins
+
+		yoix.io.readInto()
+		yoix.io.writeInto()
+		yoix.system.getModuleCreated()
+		yoix.system.getModuleNotice()
+		yoix.system.getModuleVersion()
+
+	have not been documented yet and extra arguments that we added
+	to htoa() and urlDecode() are also undocumented. A small special
+	purpose parser, namely PatternParser.jjt, was also added for an
+	existing project, but it has not been documented yet.
+
+	=== Java Code Changes ===
+
+	We changed the argument order in put() and declare() methods
+	in YoixObject.java and all other classes that implement the
+	YoixInterfacePointer interface. Done mostly so the argument
+	order matches the put method defined in a Java HashMap and
+	the set method defined in Java ArrayList. This change does
+	not affect Yoix applications, but it will make a difference
+	if you were using the Yoix source code from an older release.
+
+	---
+
+	We made lots of changes to the module loading code. Perhaps
+	most important is the removal of the DEST column (it was the
+	fifth of the six columns in old tables). The smaller tables
+	means modules use less memory and load a little faster. Look
+	through YoixModule.java if you're interested in the low level
+	module loading code.
+
+	---
+
+	We reorganized this YoixVM.java a bit, mostly by separating
+	the error handling and stack support code out into their own
+	files, which means you now look in YoixVMError.java for the
+	error code and YoixVMStack.java for the stack support code.
+	The changes were purely cosmetic (notice that YoixVM extends
+	YoixVMStack and that YoixVMStack extends YoixVMError), but
+	we think it's a small improvement.
+
+	---
+
+	We now use a special class named YoixVMDisposer to handle all
+	Window disposing. Done because Java's Window.dispose() method
+	uses invokeAndWait() when dispose() is invoked from a thread
+	that isn't the event dispatch thread. Interrupt or stop that
+	thread and you may get an unwanted Java dump, and we suppose
+	there's even a chance the dispose() won't happen. Anyway, as
+	a precaution we now use YoixVMDisposer.
+
+	---
+
+	We added an equals() method to the YoixObject class that is
+	currently used by one important custom module. Probably need
+	to take one more careful look, because we're currently using
+	the "===" variation.
+
+	---
+
+	Changed VM.canExit() slightly so now it asks YoixMain if it's
+	OK before exiting. Means the main thread really gets a chance
+	to finish.
+
+	---
+
+	The version of YoixObject.newPointer() that gets called from
+	YoixMake.yoixType() with a non-NULL classname did VM.pushError()
+	but forgot the matching VM.popError(). The mistake only affected
+	user modules that defined type templates that defined N_CLASSNAME,
+	so the omission only caused occasional (very obscure) problems.
+
+	---
+
+	Changed quite a few uses of Hashtable to HashMap, which helped
+	performance. We haven't looked at all Hashtable uses in our Java
+	code and can't just blindly convert because the synchronization
+	provided by a Hashtable could be important. Same comments apply
+	to Vector and ArrayList, which are a little bit harder to convert
+	because some method names also need to change.
+
+	---
+
+	Added some simple number caching to YoixObject.java. Seems to
+	help performance and usually should help memory usage, but we
+	haven't verified that one yet. We don't expect problems, but
+	the stuff should be very easy to back out.
+
+	---
+
+	We modified YoixMake.initializer() so it now accepts an array
+	of strings, or a comma separated list of strings enclosed in
+	braces when a string, which currently must have a well defined
+	length, is created either in a declaration or using new. This
+	turns out to be an efficient way to concatenate strings, but
+	the current restrictions (e.g., the length of the string must
+	be specified) make it less useful than you might expect.
+
+	NOTE - this is now be used by an important project, so be very
+	careful if you try to change or improve the implementation. We
+	undoubtedly will try to make this more general, but remember
+	you can always use the + operator to concatenate strings. This
+	method happens to be a little more efficient.
+
+	---
+
+	The low level Java code for Swing and AWT components now uses a
+	magic field named menumodel (if it happens to be defined in the
+	component that's listening for ItemEvents) to decide how to handle
+	checkbox or radio buttons that are grouped in a menu. The default
+	behavior used when there's no menumodel defined in the component
+	is determined by VM.menumodel, which is currently set to 1. That
+	means ItemEvents for deselection in a menu item that's also in a
+	menu group won't get passed on to a Yoix itemStateChanged() event
+	handler that's associated with the menu item. Setting VM.menumodel
+	to 0 means raw mode and all ItemEvents that get to the interpreter
+	are handed to the Yoix itemStateChanged() event handlers (if there
+	is one).
+
+	NOTE - menumodel currently only affects menu items, and only when
+	they also happen to be grouped together.
+
+	---
+
+	Added code to YoixBodyComponent.windowClosing() that checks the
+	return value of the Yoix event handler, if one was defined. Usual
+	system cleanup (i.e., disposing window and checking to see if the
+	interpreter can exit) is performed when no Yoix windowClosing()
+	event handler is defined or when the Yoix windowClosing() function
+	returns FALSE (i.e., 0). This really should be documented!!
+
+	NOTE - the behavior was chosen to match mouse event handlers in a
+	TableManager, which was a change we added (but didn't document) in
+	release 0.9.3 (check README.old file for more info). Means there's
+	at least one important AWT based application that probably relies
+	on this behavior.
+
+	=== TODO List ===
+
+	Would it be worth changing the open() builtin slightly so it
+	automatically creates a StringStream when handed a pointer to
+	a string? Sounds easy and reasonable - later.
+
+	---
+
+	Should strsplit() accept a regular expression? Also, should we
+	accept an argument (a string or maybe an array of strings) that
+	specifies strings to toss?? For example, we often may want to
+	toss empty strings, which show up when delimiters appear next
+	to each other? Possible alternative might be regsplit()??
+
+	---
+
+	Reading text from a JTable doesn't capture any editing changes.
+	Inconvenient and unfriendly - investigate later.
+
+	---
+
+	Investigate using java.io.File.createTempFile() to implement the
+	tmpfile() builtin.
+
+	---
+
+	Looks like some fields (e.g., preferredsize) may be defined in
+	Module files but not implemented or used. For example, an AWT
+	Frame defines preferredsize, YoixAWTFrame.java tries to use it,
+	it's not mentioned in the Frame reference page, and there's a
+	decent chance it has no affect on Frames, even when set by user
+	code. Eventually investigate and clean this up.
+
+	---
+
+	The low level code that implements scanf() may not be completely
+	thread safe because it uses YoixBodyStream.getChar(), which isn't
+	synchronized - investigate. This is an old item!!
+
+	---
+
+	Currently get a FatalError, without any useful information, when
+	the interpreter encounters EOF in a comment. Seems like we could
+	do much better. This is an old item!!
+
+	---
+
+	Java 1.3.1 and later define new modifier flags - check them out
+	and probably add them to the modifiers defined in yoix.awt and
+	yoix.swing. Probably also need to look at cookModifiers() code.
+	Actually think extended modifiers appeared in 1.4.1, which we
+	don't currently require, so this one will have to wait.
+
+    Version 1.1.0a (5/31/03 - external release)
+	There's a chance we may not be handing spaces in pathnames
+	quite right in the scripts that the installer builds on a
+	Windows platform. Might be spaces in the jar file pathname
+	or maybe in the existing CLASSPATH - investigate. This came
+	up when John had to help Lisa with her installed version of
+	Yoix.
+
+	---
+
+	Fixed a simple mistake in our low Java code that prevented
+	JFrame and JDialog titles from being set.
+
+	---
+
+	Low level code in YoixInterruptable.java that we designed to
+	provide interruptible IO was added in release 0.9.4 and has
+	always used a support thread to handle IO operations, like
+	SeverSocket.accept() or URLConnection.getInputStream(), that
+	could cause problems. Part of our cleanup strategy when the
+	operation completed or was interrupted called Thread.stop()
+	(which we know is deprecated) when it looked like the support
+	thread was still running. However the checks that we ran on
+	some platforms (e.g., Linux using Java 1.4.X) often made us
+	believe the support thread was still running and needed to
+	be stopped. The resulting stop() calls in YoixInterruptable,
+	which were usually unnecessary, could cause slow performance
+	or hangs. We've changed the YoixInterruptable checks and we
+	now do a much better job determining when stop() is really
+	needed, and that has eliminated performance problems that
+	stop() sometimes caused.
+
+	NOTE - this is an important fix if you're running on Linux,
+	but as far as we know other systems were not affected.
+
+	---
+
+	We added code to the Yoix installer that tries to make sure
+	you're using an appropriate version of Java. If things don't
+	look right the installer displays a Dialog with error info
+	and download instructions and then quits.
+
+	---
+
+	The scripts built and installed by the Yoix installer now
+	use "-jar yoix.jar" instead of setting (and clearing) the
+	CLASSPATH. In addition they also include -Dyoix.home=...
+	in the script command lines, so the yoix.home definition
+	is added to Java's system properties. In other words Yoix
+	programs started by those scripts can do
+
+		yoix.system.getProperty("yoix.home")
+
+	whenever they want to find out where the Yoix installer
+	put things.
+
+	NOTE - the quoting that's done for yoix_exec.bat may need
+	to protect entire paths rather than just protecting the
+	installation directory. Means the simple quoting approach
+	that we added to installer.yx on 3/29/03 may have to be
+	modified.
+
+	---
+
+	Changed our low level Java code to make sure JLabels always
+	show up, even when they're asked to display text that's NULL
+	or the empty string. The best way to make labels disappear,
+	at least from our point of view, is to hide them by setting
+	visible to FALSE, rather than by storing NULL or the empty
+	string in the JLabel.
+
+	---
+
+	Added TreeSelectionEvent, which means a JTree can define
+	valueChanged() event handler if if wants to be notified
+	whenever its selection state changes. Punted on the code
+	(in YoixMake.java) needed to post a TreeSelectionEvent to
+	a JTree, at least for now, but we will tackle it in the
+	near future. Documentation is also missing.
+
+	---
+
+	Fixed a low level mistake that prevented event handlers,
+	like keyPressed(), from receiving events when they were
+	added to swing components, like JTextArea, that also had
+	internal scrolling support. Also fixed a related mistake
+	that caused problems if we tried to post an event to a
+	component, like a JTextArea, that had internal scrolling
+	support.
+
+	---
+
+	Added deleteText(), insertText(), and replaceText() to the
+	AWT and Swing modules. They complement appendText(), which
+	is a builtin that's been around for a long time. Still need
+	to document and thoroughly test the new builtins. We also
+	added optional arguments to appendText() that need to be
+	documented. Part of adding the builtins involved rewriting
+	much of the low level Java code that supported appendText().
+
+	NOTE - these builtins do not currently (5/29/03) work with
+	a JTextPane. See the YoixBodyComponentSwing.replaceText()
+	for more info.
+
+	---
+
+	Added -S to the options supported by the interpreter. It
+	can be used to install a security manager at startup that
+	implements the policies specified by one or more command
+	line -S options. For example,
+
+		yoix -S'prompt:file' ...
+
+	prompts with a dialog whenever the Yoix program that you're
+	running tries to read, write, delete, or execute a local
+	file, while
+
+		yoix -S'prompt:checkRead' ...
+
+	prompts you before Java reads any file (note that checkRead
+	is the name of the SecurityManager function that Java calls
+	when it needs to get approval before reading a local file).
+	The only current documentation is the source code in file
+	YoixSecurityPolicy.java.
+
+	---
+
+	Moved the Thread type definition from YoixModuleThread.java
+	to YoixModuleVM.java and installed it in typedict when the
+	interpreter starts, instead of relying on automatic loading.
+	Reason is that we could end up in deadlock when we used the
+	new -S to display a prompt dialog. The exact details of the
+	deadlock aren't terribly important - it was pretty easy to
+	reproduce. Happened when low level Java code decided to call
+	checkAccess() from a GUI thread and our implementation of
+	that method called YoixMake.yoixThread(t), which trigged a
+	load of the thread type in typedict.
+
+	---
+
+	Made a small change to the code that handles KeyEvents in
+	YoixMake.yoixEvent() and we now store -1 in keychar when
+	key is pressed or released and it doesn't correspond to a
+	Unicode character. All previous releases returned 65535,
+	which corresponds to Java's KeyEvent.CHAR_UNDEFINED, but
+	the behavior was not documented in Yoix and we did not
+	define a CHAR_UNDEFINED constant that programs could use.
+	Very small chance an existing program could be affected,
+	so make sure we test thoroughly. Done on 3/26/03 and we
+	didn't run many tests. Alternative solution would be to
+	add CHAR_UNDEFINED to yoix.awt and yoix.swing, but that
+	seemed like complete overkill. Revisit and document the
+	new behavior before our next release!!
+
+	---
+
+	Several strings in YoixModuleIO.java and YoixModuleVM.java
+	were defined with $LR__ access, but should have been $RORO.
+	The constants included ISO8859_1, UTF8, and the N_NAME and
+	N_MODE fields assigned to stdin, stdout, and stderr. The
+	mistake has been corrected.
+
+	---
+
+	Added two builtins name viewToModel() and modelToView()
+	to JTextArea, JTextField and JTextPane. Both need to be
+	documented and modelToView() needs testing!!
+
+	---
+
+	Added YoixSwingHighlighter.java, YoixSwingJTextField.java,
+	and YoixSwingJTextArea.java. They were added to help with
+	a custom application, but we think they add capabilities
+	that may be useful elsewhere. Has not been documented,
+	at least right now, but eventually will be. Highlights
+	can currently be accessed using the getHightlights() and
+	setHighlights() builtins that were added to yoix.swing,
+	while some of the low level behavior of highlights can
+	be controlled by setting highlightflags, which is a new
+	integer field that was added to JTextArea, JTextField,
+	and JTextPane components. The bottom 8 or 9 bits are
+	currently used, but right now the only documentation is
+	the Java code in YoixSwingHighlighter.java.
+
+	---
+
+	Fields named selectionforeground and selectionbackground
+	have been added to JTextArea, JTextField, and JTextPane.
+	Needs to be documented and tested.
+
+	---
+
+	Added a requestfocusenabled field to all Swing components
+	that can explicitly (by storing true in requestfocus) or
+	implicitly (e.g., pressing a button when the pointer is
+	in the component) request the focus. Setting it to false
+	means requests for the focus will be ignored. This field
+	should be viewed as a hint that Java may or may not honor,
+	however our experience setting requestfocusenabled has
+	been very good.
+
+	---
+
+	Added a nextfocus field to all Swing components that can
+	explicitly request the focus. The value that is stored in
+	nextfocus is the component that gets the focus after this
+	one when the focus is changed by the focus traversal keys
+	(Tab or Crtl-Tab). Needs to be documented and tested.
+
+	---
+
+	Added a field named insets to JTextArea, JTextField, and
+	JTextPane. Still needs to be documented.
+
+	---
+
+	Changed Regexp.bldcclass() so it accepts a dash (i.e., -)
+	as the first or last character in a character class.
+
+	---
+
+	Added yoix.system.getModuleVersion() builtin. Not convinced
+	it should to be documented - really seems like there should
+	be a more general approach.
+
+	---
+
+	Looks like there's a bug in ?: operator. The grouping in
+	the parse tree built by YoixParser.jjt for
+
+		0 ? 1 : 2 + 3;
+
+	doesn't look like it matches C because the parser currently
+	requires parens around the expression that follows the colon.
+	Find a fix, but then think about whether and/or how to put
+	it in. The change could easily affect existing applications??
+
+    Version 1.1.0 (1/23/03 - external release)
+	Java2D, Swing, and expanded Image support are the main new
+	additions. Take a look at the Graphics, Path, Matrix, and
+	Font reference pages (and the pages they reference) and you
+	will find lots of Java2D examples. Swing component names
+	all start with J (e.g., JButton, JFrame) and most of the
+	reference pages include examples. The Image reference page
+	(and the pages that it references) describe the new Image
+	processing builtins that were added in this release as well
+	as being a good source of examples.
+
+	---
+
+	Frame, Dialog, Window, Panel, Canvas, and Image are drawable
+	objects, which means each one defines fields named graphics
+	and paint that can be used to draw on them. The same thing
+	holds for the JFrame, JDialog, JWindow, JPanel, and JCanvas
+	objects that were added as part of our Swing support. See
+	the individual reference pages for more info. The Graphics
+	reference page (and the pages that it references) is a good
+	source of examples.
+
+	---
+
+	Objects that implement paint() now accept a function that can
+	be called with 0 or 1 argument and complain with a typecheck
+	error when an invalid function is assigned to paint. Previous
+	releases assumed paint functions could be called with exactly
+	one argument and only noticed invalid functions when the call
+	to paint() was generated.
+
+	---
+
+	Drawable objects now define a repaint() builtin that tells
+	the drawable object to completely repaint itself.
+
+	---
+
+	Added a field named coordinates to MouseEvents. It describes
+	where the event happened, much like the location field, but
+	when a MouseEvent arrives at the handler in a drawable object
+	coordinates will always be a point in the coordinate system
+	described by the drawable object's graphics.CTM matrix at the
+	time the event arrives. In other words, coordinates is often
+	used by event handlers that draw in an object, like a Frame
+	or a Canvas.
+
+	---
+
+	InvocationEvent is a new event type that Yoix programs can
+	send to AWT or Swing components with postEvent(). The event
+	triggers a call of the component's invocationRun() event
+	handler, if it's defined. As you might expect, the call is
+	made from the thread Java is using to dispatch AWT Events.
+
+	---
+
+	This release supports four Swing events, namely CaretEvent,
+	ChangeEvent, HyperlinkEvent, and ListSelectionEvent, which
+	are described in the reference pages. Future releases will
+	support more Swing events.
+
+	---
+
+	The postEvent() builtin can be used to send events through
+	Java's AWT EventQueue to any component that Yoix supports.
+	There are no restrictions about Swing components or Swing
+	events, except that you won't be able to send an event to
+	a component that can't officially handle the event. We also
+	changed postEvent's behavior slightly and made it return a
+	non-zero value if the event was put on AWT event queue. In
+	previous releases postEvent aborted with a badargument error,
+	but we decided that a return value would be a better way to
+	handle queuing errors. See the postEvent reference page for
+	more details.
+
+	---
+
+	Added the invokeLater() builtin (available in yoix.awt or
+	yoix.swing) that arranges to call a Yoix function after the
+	events pending in the Java AWT EventQueue at the time of the
+	invokeLater() call are processed. The call is made from the
+	thread that Java is using to dispatch Events.
+
+	---
+
+	Added the isDispatchThread() builtin (available in yoix.awt
+	or yoix.swing) that returns non-zero value if the calling
+	thread is the one used to dispatch AWT events.
+
+	---
+
+	The hints field that was defined in an Image has disappeared.
+	Existing applications that were using the Image hints field
+	may need to be updated.
+
+	---
+
+	The Image source field can now be a String or another Image.
+	Setting it to an Image, which wasn't allowed in our previous
+	releases, means make an immediate copy of the source image
+	so that both images will be completely independent. Setting
+	source to NULL (or "") means build a memory resident image
+	that has a size specified by the Image's size field. This is
+	a small change from previous releases, which did not build
+	a memory resident image when source was NULL.
+
+	---
+
+	The atoh() builtin no longer stops at the first null character,
+	which means it does a much better job working with the htoa()
+	builtin. In addition htoa, which still stops at the first null
+	character, ignores all other characters that don't represent
+	hex digits. These changes could impact existing applications,
+	but we think they're appropriate - please complain to us if
+	you disagree.
+
+	---
+
+	The appendText() builtin, which works for many AWT and Swing
+	components that define a field named text, now checks the
+	read and write access permission assigned to that field. It
+	also returns the length of the text string that was appended
+	or -1 if there was an error.
+
+	---
+
+	Fixed an inconsistency in the low level implementation of the
+	qsort() builtin so that the sorting when the compare function
+	is omitted or supplied as yoix.util.compareTo match as long
+	as no elements are NULL. Unfortunately this is a change that
+	could affect existing applications.
+
+	---
+
+	The position of the count and callable arguments described in
+	the qsort() reference page was incorrect and has been fixed.
+
+	---
+
+	Modified the low level implementation of the qsort() builtin
+	in a way that significantly improves performance when lots of
+	identical objects are encountered in the array that's being
+	sorted.
+
+	---
+
+	The colors (more than 700) defined in the rgb.txt file that's
+	part of the X Window System are now available (lower case only)
+	in the yoix.xcolor dictionary.
+
+	---
+
+	Constants BOTTOMLEFT, BOTTOMRIGHT, TOPLEFT, and TOPRIGHT are
+	now defined in yoix.awt and can be used in place of SOUTHWEST,
+	SOUTHEAST, NORTHWEST, and NORTHEAST. Identical constants are
+	defined in yoix.swing and can be used in the same situations
+	plus a few.
+
+	---
+
+	The clip entry in a Graphics is now a builtin instead of a
+	Rectangle. New model follows PostScript, so the clip builtin
+	creates a new clipping path by intersecting the current path
+	with the current clipping path. Use initclip first when you
+	need to enlarge the clipping path. This is an incompatible
+	change, but we seriously doubt anyone was using the old clip
+	model.
+
+	---
+
+	Fixed a mistake in the parser related to casts that caused
+	simple expressions like,
+
+		x = (int)12.3;
+
+	to fail. This change seems to fix the most annoying cast
+	problems, but we still realize there's at least one fairly
+	obscure cast related problem that we will try to fix next
+	time. This
+
+		x = (int)(12.3 + 4.8);
+
+	works, but put parens around the entire right side and the
+	parser gets confused and generates code for a function call.
+	We understand what's happening, but don't have a fix that
+	we're currently satisfied with.
+
+	---
+
+	Changing an AWT Frame's background or foreground color now
+	also tries to affect the frame's menubar, if there is one.
+	This change is implemented by removing and reattaching the
+	the menubar, which seems to work on some Unix platforms but
+	unfortunately not on Windows. We may add a system test and
+	leave the menubar alone on systems, like Windows, where the
+	background color doesn't change.
+
+	---
+
+	Added an optional alpha argument to the drawString() builtin
+	defined in yoix.graphics. We considered adding alpha to other
+	yoix.graphics builtins, like drawArc() and fillRect(), but
+	decided against it, at least for now. Partially transparent
+	shapes can be painted using the fill() and stroke() builtins
+	that are defined in Graphics objects.
+
+	---
+
+	The group field in a Checkbox is now active so changing it
+	should affect all "related" checkboxes. Setting it to null
+	should also remove the checkbox from the group.
+
+	---
+
+	Removed the nextcard field from ScrollPane. It could not be
+	used because the layoutmanager is an internal version that
+	can't ever be set to CardLayout.
+
+	---
+
+	Fixed an apparent mistake in YoixAWTTextField.java that only
+	seemed to cause problems on one platform using a new version
+	of Java (e.g., 1.4.1 on Linux). The getMinimumSize() method
+	called super.getPreferredSize() and under some circumstances
+	that could end up in an infinite loop. Replacing that call
+	with super.getMinimumSize() fixed the problem.
+
+	---
+
+	Many entries in typedict were readable and writable in our
+	last release. We've fixed the mistake by removing all access
+	(except to the name). We're not trying to hide anything (the
+	source code is available to anyone), but didn't think Yoix
+	programs should change typedict entries or make decisions
+	based on the content of a typedict entry.
+
+	---
+
+	We spent some time working on the Yoix module related code
+	and made many methods in YoixObject, YoixVM, YoixMisc, and
+	YoixMake public so they're available to be used in modules
+	that don't belong to the att.research.yoix package. We also
+	removed YoixPublic.java and YoixPublicConstants.java, which
+	were class files that provided access to some of the methods
+	that are now public. Module documentation is still missing,
+	but the comments and code in ExampleModule.java should help
+	some.
+
+	---
+
+	Added fields named buttonmask and sticky to TextCanvas and
+	Canvas objects. buttonmask selects the buttons that trigger
+	actionPerformed or itemStateChanged event and sticky controls
+	when state is reset to FALSE after an actionPerformed event
+	is triggered. Setting sticky to TRUE means the state is not
+	reset when an actionPerformed event is triggered, which means
+	it must be done somewhere else (e.g., in event handler) before
+	another actionPerformed event can be triggered. These fields
+	may not be documented in reference pages, which means there
+	is no guarantee they will be around in future releases.
+
+	---
+
+	The qsort() builtin in this release accepts a dictionary as
+	the compare argument, but it has not been documented here or
+	in the reference page, which means there is no guarantee it
+	will be accepted in future releases.
+
